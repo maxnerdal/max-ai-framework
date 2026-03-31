@@ -1,0 +1,11 @@
+# Personal config — contains Drive IDs, never commit
+config.md
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Node dependencies
+mcp-servers/gdrive/node_modules/
+
+# macOS
+.DS_Store
