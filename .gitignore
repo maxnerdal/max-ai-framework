@@ -1,5 +1,11 @@
-# Personal config — contains Drive IDs, never commit
+# Personal config — contains Drive IDs and API keys, never commit
 config.md
+cura-connect/config.md
+
+# Python
+__pycache__/
+*.pyc
+*.log
 
 # Claude Code local settings
 .claude/settings.local.json
