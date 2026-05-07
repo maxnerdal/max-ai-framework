@@ -176,3 +176,11 @@ After building:
 - Confirm a new subfolder appears in `applications/` on Google Drive with correct documents
 - Run `/update-application <company> interview` and confirm tracker updates
 - Run `/interview-prep` and confirm it lists the correct job and produces a prep doc
+
+---
+
+## Open TODOs
+
+- [ ] Fix paths in `.claude/agents/` — after repo restructure, agents still reference old paths (e.g. `ai-framework/config.md`). Update to `max-ai-framework/personal/config.md` and any other stale references.
+- [ ] Resolve `.mcp.json` location — currently at repo root. Decide whether it moves to `.claude/mcp.json` (makes Drive MCP global across all sessions) and update setup instructions accordingly.
+- [ ] Test `setup.sh` on a clean machine or by temporarily removing the symlink targets and re-running.
