@@ -1,17 +1,18 @@
-# Personal config — contains Drive IDs and API keys, never commit
-config.md
-cura-connect/config.md
+# Personal config — contains Drive IDs, API keys, OAuth tokens — never commit
+**/config.md
+**/token.json
+**/credentials.json
+
+# Claude Code machine-specific settings
+.claude/settings.local.json
 
 # Python
-__pycache__/
+**/__pycache__/
 *.pyc
 *.log
 
-# Claude Code local settings
-.claude/settings.local.json
-
 # Node dependencies
-mcp-servers/gdrive/node_modules/
+**/node_modules/
 
 # macOS
 .DS_Store
