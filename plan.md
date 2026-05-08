@@ -32,8 +32,23 @@ See `setup.sh` at the repo root.
 
 ---
 
+## Skills and workflows across projects (no sync needed)
+
+Skills and workflows are markdown files Claude reads as instructions — not a Claude Code system feature. This means they can be pointed to from `~/.claude/CLAUDE.md` and Claude will find them in any project without syncing:
+
+> "Dev team skills and workflows live at `~/max-ai-framework/max-nerdal-ab/`. Read them when relevant."
+
+**Agents are different.** Claude Code's `@agent-name` invocation is hardcoded to look in `~/.claude/agents/` and the project's `.claude/agents/`. A CLAUDE.md pointer cannot change this. Agents must be in one of those two places to be formally invoked as subagents.
+
+**Practical split:**
+- Skills and workflows → develop in context folders (`max-nerdal-ab/` etc.), reference via `~/.claude/CLAUDE.md`
+- Agents → live directly in `.claude/agents/`, already global, no sync needed
+
+---
+
 ## Open TODOs
 
 - [ ] Test `setup.sh` — run on a clean machine or by temporarily removing symlink targets and re-running.
 - [ ] Fix paths in `.claude/agents/` — agents still reference old paths (e.g. `ai-framework/config.md`). Update to `max-ai-framework/personal/config.md` and any other stale references.
 - [ ] Resolve `.mcp.json` location — currently at repo root. Decide whether it moves to `.claude/mcp.json` to make Drive MCP global, and update setup instructions accordingly.
+- [ ] Discuss and clarify the definition of "agents" — there is a conceptual mismatch between Max's use of the word (autonomous pipelines / dev team roles built from skills) and Claude Code's use of the word (subagents in `.claude/agents/` with their own context window). Need to align on terminology before building out the dev team.
