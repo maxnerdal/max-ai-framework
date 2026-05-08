@@ -52,3 +52,4 @@ Skills and workflows are markdown files Claude reads as instructions — not a C
 - [ ] Fix paths in `.claude/agents/` — agents still reference old paths (e.g. `ai-framework/config.md`). Update to `max-ai-framework/personal/config.md` and any other stale references.
 - [ ] Resolve `.mcp.json` location — currently at repo root. Decide whether it moves to `.claude/mcp.json` to make Drive MCP global, and update setup instructions accordingly.
 - [ ] Discuss and clarify the definition of "agents" — there is a conceptual mismatch between Max's use of the word (autonomous pipelines / dev team roles built from skills) and Claude Code's use of the word (subagents in `.claude/agents/` with their own context window). Need to align on terminology before building out the dev team.
+- [ ] Get microphone working with Claude Code in the terminal inside VS Code.
