@@ -1,34 +1,30 @@
-# ai-framework
+# max-ai-framework
 
-A portable, config-driven framework of skills, agents, workflows, and prompts for working with Claude.
+Max Nerdal's personal AI framework. Version-controlled source of truth for Claude Code configs, skills, agents, and workflows across personal and work contexts.
 
 ## Structure
 
 ```
-ai-framework/
-├── skills/           # SKILL.md files teaching Claude how to do things
-├── agents/           # Autonomous workers combining multiple skills
-├── workflows/        # Named repeatable multi-step processes
-├── prompts/          # Reusable prompt templates
-├── config.example.md # Template for personal config (safe to commit)
-└── config.md         # Your personal config with real IDs (gitignored)
+max-ai-framework/
+  .claude/              — Global Claude Code config (agents, commands, settings)
+  personal/             — Personal context: job applications, CV, Drive integration
+  cura-connect/         — Work automation for Cura Connect AB
+  max-nerdal-ab/        — Consulting work (Max Nerdal AB)
+  claude-cowork/        — Cowork scheduled task definitions
+  docs/                 — Setup guides
+  plan.md               — Framework decisions and open TODOs
+  setup.sh              — Creates symlinks on a new machine
 ```
-
-## Setup
-
-1. Copy `config.example.md` to `config.md`
-2. Fill in your own Google Drive folder and file IDs
-3. `config.md` is gitignored — it will never be committed
 
 ## Design principles
 
-- **Logic lives in the repo** — skills, agents, workflows are shareable
+- **Logic lives in the repo** — skills, agents, workflows are version-controlled and shareable
 - **Data never lives in the repo** — personal files stay in Google Drive
-- **Config bridges the two** — `config.md` holds pointers to your data
-- **Portable** — clone on a new machine, fill in `config.md`, done
+- **Config bridges the two** — each context has a `config.md` (gitignored) with keys and IDs
+- **Project code lives elsewhere** — projects like `tradingbots` have their own repos; this framework only contains Claude configuration
 
-## Skills
+## Getting started
 
-| Skill | Description |
-|-------|-------------|
-| [cv-writer](skills/cv-writer/SKILL.md) | Writes tailored CVs and personal letters from your Google Drive docs |
+See [docs/setup.md](docs/setup.md) for setup instructions.
+
+For a dedicated always-on server setup, see [docs/server-setup.md](docs/server-setup.md).
