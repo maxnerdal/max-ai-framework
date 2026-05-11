@@ -18,7 +18,8 @@ Agents live in `../.claude/agents/` and commands in `../.claude/commands/` — t
 - Skills are built using `/skill-creator`
 
 ## Local setup
-- Google Drive MCP configured in: `~/.claude/mcp.json`
+- Google Drive MCP configured in: `personal/.mcp.json` (project-scoped — loaded when Claude Code starts in `personal/`)
+- MCP server code: `personal/mcp-servers/gdrive/index.js`
 - OAuth client keys: `~/.config/claude/gcp-oauth.keys.json`
 - OAuth tokens: `~/.config/claude/.gdrive-server-credentials.json`
 - Config with personal Drive IDs: `config.md` (gitignored)

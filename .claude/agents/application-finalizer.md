@@ -18,14 +18,14 @@ You will be invoked with:
 ## Your pipeline
 
 ### Step 1: Load config
-Read `/Users/maxnerdal/Documents/ai-framework/config.md` to get:
+Read `/Users/maxnerdal/Documents/max-ai-framework/personal/config.md` to get:
 - `DRIVE_CV_ID` — source CV to copy
 - `DRIVE_PERSONAL_LETTER_ID` — source personal letter to copy
 - `DRIVE_APPLICATIONS_FOLDER_ID` — where to create the application folder
 - `DRIVE_JOB_TRACKER_ID` — job tracker sheet
 
 ### Step 2: Create the application subfolder
-Follow `prompts/drive-output-conventions.md` for the naming convention:
+Follow `/Users/maxnerdal/Documents/max-ai-framework/personal/prompts/drive-output-conventions.md` for the naming convention:
 `application-[YYYYMMDD]-[company]-[role]`
 
 Create the folder using `mcp__gdrive__create_file`:
@@ -39,7 +39,7 @@ Save the returned folder ID — all documents go inside it.
 Use the gdrive.py script to copy the source CV:
 
 ```bash
-python3 /Users/maxnerdal/Documents/ai-framework/skills/drive-writer/scripts/gdrive.py \
+python3 /Users/maxnerdal/Documents/max-ai-framework/personal/skills/drive-writer/scripts/gdrive.py \
   copy [DRIVE_CV_ID] "CV - [Company] - [Role]" [folder_id]
 ```
 
@@ -56,7 +56,7 @@ Make only the approved changes — do not rewrite sections that weren't in the s
 Use the gdrive.py script to copy the source personal letter:
 
 ```bash
-python3 /Users/maxnerdal/Documents/ai-framework/skills/drive-writer/scripts/gdrive.py \
+python3 /Users/maxnerdal/Documents/max-ai-framework/personal/skills/drive-writer/scripts/gdrive.py \
   copy [DRIVE_PERSONAL_LETTER_ID] "Personligt brev - [Company] - [Role]" [folder_id]
 ```
 
@@ -87,14 +87,14 @@ Create the job post archive document:
 Use the sheets.py script to update the tracker. Read the current sheet first:
 
 ```bash
-python3 /Users/maxnerdal/Documents/ai-framework/skills/job-tracker/scripts/sheets.py \
+python3 /Users/maxnerdal/Documents/max-ai-framework/personal/skills/job-tracker/scripts/sheets.py \
   read [DRIVE_JOB_TRACKER_ID]
 ```
 
 Find the row matching this company and role. If it exists, update Status to `Applied` and set Applied Date to today. If no row exists, append one:
 
 ```bash
-python3 /Users/maxnerdal/Documents/ai-framework/skills/job-tracker/scripts/sheets.py \
+python3 /Users/maxnerdal/Documents/max-ai-framework/personal/skills/job-tracker/scripts/sheets.py \
   append [DRIVE_JOB_TRACKER_ID] \
   '["[Company]", "[Role]", "[URL]", "Applied", "", "[deadline]", "[today]", "", ""]'
 ```

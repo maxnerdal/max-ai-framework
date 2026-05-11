@@ -38,16 +38,14 @@ echo "max-ai-framework setup"
 echo "Repo: $REPO_DIR"
 echo ""
 
-# 1. ~/.claude -> repo/.claude
-#    Claude Code global config: agents, commands, hooks, settings
-info "Linking ~/.claude"
-backup_and_link "$HOME/.claude" "$REPO_DIR/.claude"
-
-# 2. ~/Documents/Claude/Scheduled -> repo/claude-cowork/Scheduled
-#    Cowork picks up scheduled tasks from this path
-info "Linking ~/Documents/Claude/Scheduled"
-mkdir -p "$HOME/Documents/Claude"
-backup_and_link "$HOME/Documents/Claude/Scheduled" "$REPO_DIR/claude-cowork/Scheduled"
+# Symlink the repo-controlled bits of ~/.claude/ individually.
+# We do NOT symlink the whole ~/.claude/ — Claude Code writes runtime files
+# (projects/, sessions/, mcp.json, settings.json, ...) into ~/.claude/ that
+# should not land in the repo.
+info "Linking ~/.claude/CLAUDE.md, agents/, commands/"
+backup_and_link "$HOME/.claude/CLAUDE.md" "$REPO_DIR/.claude/CLAUDE.md"
+backup_and_link "$HOME/.claude/agents"    "$REPO_DIR/.claude/agents"
+backup_and_link "$HOME/.claude/commands"  "$REPO_DIR/.claude/commands"
 
 echo ""
-echo "Done. If ~/.claude was backed up, review it and copy anything you want to keep into $REPO_DIR/.claude"
+echo "Done. Any pre-existing files were backed up with timestamped paths — see warnings above."

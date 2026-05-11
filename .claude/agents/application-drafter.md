@@ -19,7 +19,7 @@ You will be invoked with one of:
 Run these steps in order without stopping for confirmation:
 
 ### Step 1: Load config
-Read `/Users/maxnerdal/Documents/ai-framework/config.md` to get all Drive IDs.
+Read `/Users/maxnerdal/Documents/max-ai-framework/personal/config.md` to get all Drive IDs.
 
 ### Step 2: Load source material
 Read these documents from Drive using `mcp__gdrive__read_file`:
@@ -32,7 +32,7 @@ Then load work references:
 - Read any relevant reference letters
 
 ### Step 3: Parse the job post
-Follow the job-post-parser skill at `skills/job-post-parser/SKILL.md`.
+Follow the job-post-parser skill at `/Users/maxnerdal/Documents/max-ai-framework/personal/skills/job-post-parser/SKILL.md`.
 
 Extract the full job object:
 - Company, role, location, remote, employment type, language
@@ -46,23 +46,23 @@ If given a URL, use `WebFetch` to retrieve the posting. If WebFetch fails, repor
 Use `mcp__gdrive__search` to find past CVs and letters from similar roles in `DRIVE_APPLICATIONS_FOLDER_ID`. Read 1-2 relevant matches to understand what has worked before.
 
 ### Step 5: Suggest CV changes
-Follow the cv-tailorer skill at `skills/cv-tailorer/SKILL.md`.
+Follow the cv-tailorer skill at `/Users/maxnerdal/Documents/max-ai-framework/personal/skills/cv-tailorer/SKILL.md`.
 
 Read the user's CV and identify targeted changes that would strengthen it for this role. Present as a numbered list — specific and surgical. Typical changes: reorder bullet points, reword to mirror job posting language, update the profile summary to reference this company and role explicitly, expand a relevant bullet, remove irrelevant content.
 
 Keep the list to 3-6 changes. Do not suggest cosmetic edits. Do not rewrite the whole CV.
 
-Apply tailoring principles from `prompts/tailoring-principles.md`.
+Apply tailoring principles from `/Users/maxnerdal/Documents/max-ai-framework/personal/prompts/tailoring-principles.md`.
 
 ### Step 6: Suggest personal letter changes
-Follow the personal-letter-writer skill at `skills/personal-letter-writer/SKILL.md`.
+Follow the personal-letter-writer skill at `/Users/maxnerdal/Documents/max-ai-framework/personal/skills/personal-letter-writer/SKILL.md`.
 
 Read the user's personal letter and identify targeted changes. The opening paragraph almost always needs updating to reference the specific company and role. Other changes should be minimal — preserve the user's voice and structure.
 
-Apply tailoring principles from `prompts/tailoring-principles.md`.
+Apply tailoring principles from `/Users/maxnerdal/Documents/max-ai-framework/personal/prompts/tailoring-principles.md`.
 
 ### Step 7: Prepare likely screening answers
-Follow the screening-answerer skill at `skills/screening-answerer/SKILL.md`.
+Follow the screening-answerer skill at `/Users/maxnerdal/Documents/max-ai-framework/personal/skills/screening-answerer/SKILL.md`.
 
 Prepare answers for the most common screening question types:
 - Motivation / why this role

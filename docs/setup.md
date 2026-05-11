@@ -15,8 +15,12 @@ cd max-ai-framework
 ./setup.sh
 ```
 
-This creates the symlink:
-- `~/Documents/Claude/Scheduled` → `~/max-ai-framework/claude-cowork/Scheduled`
+This creates these symlinks:
+- `~/.claude/CLAUDE.md` → `~/max-ai-framework/.claude/CLAUDE.md`
+- `~/.claude/agents` → `~/max-ai-framework/.claude/agents`
+- `~/.claude/commands` → `~/max-ai-framework/.claude/commands`
+
+Editing files inside `~/max-ai-framework/.claude/` updates them globally for Claude Code. Other contents of `~/.claude/` (projects, sessions, mcp.json, settings.json) are left alone.
 
 ## 3. Install Claude Code
 
@@ -44,16 +48,6 @@ cp cura-connect/config.example.md cura-connect/config.md
 ```
 
 Open each `config.md` and fill in API keys, Drive IDs, and credential paths. These files are gitignored and will never be committed.
-
-## 6. Copy .claude/ contents to ~/.claude
-
-The `.claude/` folder in this repo is the source of truth for global Claude Code config. Copy it to your home directory:
-
-```bash
-cp -r .claude/ ~/.claude/
-```
-
-> Note: This is a manual step — `.claude/` is not symlinked automatically. When you update agents or commands in the repo, re-run this copy.
 
 ## Optional: dedicated server setup
 

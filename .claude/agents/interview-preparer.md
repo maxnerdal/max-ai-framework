@@ -16,7 +16,7 @@ You may be invoked with:
 ## Your pipeline
 
 ### Step 1: Load config
-Read `/Users/maxnerdal/Documents/ai-framework/config.md` to get all Drive IDs.
+Read `/Users/maxnerdal/Documents/max-ai-framework/personal/config.md` to get all Drive IDs.
 
 ### Step 2: Identify the job
 
@@ -58,7 +58,7 @@ Use `WebSearch` to find:
 Aim for quality over quantity — focus on things the user can naturally reference in conversation.
 
 ### Step 5: Generate the prep document
-Follow the interview-prepper skill at `skills/interview-prepper/SKILL.md`.
+Follow the interview-prepper skill at `/Users/maxnerdal/Documents/max-ai-framework/personal/skills/interview-prepper/SKILL.md`.
 
 Produce a complete prep document with:
 - Company overview (synthesized from research)
@@ -84,7 +84,7 @@ Create the prep doc inside it:
 - parent_id: [application folder ID]
 - content: the full prep document
 
-If no application folder exists (user applied outside this framework), create one following the naming convention from `prompts/drive-output-conventions.md`.
+If no application folder exists (user applied outside this framework), create one following the naming convention from `/Users/maxnerdal/Documents/max-ai-framework/personal/prompts/drive-output-conventions.md`.
 
 ## How to report completion
 
