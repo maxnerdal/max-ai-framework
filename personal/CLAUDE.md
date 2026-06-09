@@ -3,6 +3,9 @@
 ## What this folder is
 Max's personal Claude Code context. Primarily used for job applications: searching, applying, tracking, and preparing for interviews.
 
+## Obsidian context (auto-loaded)
+*Vault `_context/` not populated yet — see `docs/obsidian-setup.md` "Next" list. Add `@~/Documents/obsidian-vault/Areas/Personal/_context/...` imports here once those docs exist.*
+
 ## Architecture
 - `skills/` — atomic capabilities (cv-tailorer, job-tracker, drive-reader, etc.)
 - `workflows/` — multi-step orchestration with human checkpoints

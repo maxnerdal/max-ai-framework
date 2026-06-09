@@ -6,6 +6,9 @@
 # Claude Code machine-specific settings
 .claude/settings.local.json
 
+# Backup files (may contain stale copies of gitignored secrets)
+*.bak
+
 # Python
 **/__pycache__/
 *.pyc

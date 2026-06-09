@@ -116,14 +116,40 @@ On the server MacBook:
 
 ## Step 4 — Clone max-ai-framework and run setup.sh (remote, via SSH)
 
+### SSH into the server
+From your main Mac:
+```bash
+ssh Max@100.86.152.44      # or: ssh Max@cura-server if you set a Tailscale hostname
+```
+Your prompt should change to indicate you're now on the server.
+
+### Clone and run setup
+On the server:
 ```bash
 git clone https://github.com/maxnerdal/max-ai-framework.git
 cd max-ai-framework
 ./setup.sh
 ```
 
-This creates the symlink:
-- `~/Documents/Claude/Scheduled` → `~/max-ai-framework/claude-cowork/Scheduled`
+`setup.sh` symlinks the repo-controlled bits of `~/.claude/` into the home directory so Claude Code picks them up globally:
+- `~/.claude/CLAUDE.md` → `~/max-ai-framework/.claude/CLAUDE.md`
+- `~/.claude/agents` → `~/max-ai-framework/.claude/agents`
+- `~/.claude/commands` → `~/max-ai-framework/.claude/commands`
+
+Verify:
+```bash
+ls -la ~/.claude/CLAUDE.md ~/.claude/agents ~/.claude/commands
+```
+Each line should show `->` pointing into `~/max-ai-framework/.claude/`.
+
+### Symlink Cowork scheduled tasks (manual on this server)
+The Cowork desktop app reads scheduled tasks from `~/Documents/Claude/Scheduled`. This always-on server is where the schedule actually runs, so point that path at the repo's `claude-cowork/Scheduled/` — combined with the LaunchAgent in Step 5, this means any task you create in Cowork auto-commits to GitHub:
+```bash
+mkdir -p ~/Documents/Claude
+ln -s ~/max-ai-framework/claude-cowork/Scheduled ~/Documents/Claude/Scheduled
+```
+
+> Note: This symlink is no longer created by `setup.sh` — it's manual because not every machine using this repo wants Cowork tasks tied to the repo. On the always-on server, you do.
 
 ### Set up GitHub SSH authentication for auto-push
 ```bash

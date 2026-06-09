@@ -13,6 +13,9 @@ This global config is part of `max-ai-framework` — a personal framework with s
 
 When working inside one of these folders, that folder's CLAUDE.md has the relevant context.
 
+## Obsidian — Second Brain
+Obsidian is the single source of truth for all project context, brand information, strategy docs, meeting notes, and business knowledge.
+
 ## General preferences
 - Concise responses — no trailing summaries, no restating what was just done
 - No emojis

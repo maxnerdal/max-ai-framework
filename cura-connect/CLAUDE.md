@@ -3,6 +3,20 @@
 ## What this folder is
 Work automation for Cura Connect AB (`curaconnect.se`). Follows the same three-layer architecture as the parent framework.
 
+## Obsidian context (auto-loaded)
+Canonical business docs from the vault — loaded into every session started in this folder.
+
+@~/Documents/obsidian-vault/Areas/Cura Connect/_context/About.md
+@~/Documents/obsidian-vault/Areas/Cura Connect/_context/BrandGuidelines.md
+@~/Documents/obsidian-vault/Areas/Cura Connect/_context/Glossary.md
+@~/Documents/obsidian-vault/Areas/Cura Connect/_context/ICP.md
+@~/Documents/obsidian-vault/Areas/Cura Connect/_context/Operations.md
+@~/Documents/obsidian-vault/Areas/Cura Connect/_context/Recman.md
+@~/Documents/obsidian-vault/Areas/Cura Connect/_context/Services.md
+@~/Documents/obsidian-vault/Areas/Cura Connect/_context/Values.md
+
+`Projects/` and `Notes/` are read on demand (large + situational) — see `~/.claude/rules/obsidian.md`.
+
 ## Architecture
 - `skills/` — atomic capabilities
 - `workflows/` — orchestration with setup instructions
