@@ -89,13 +89,8 @@ cura-connect/CLAUDE.md                   ← area context
 - **`@import` only the canonical and stable.** `_context/` files = yes. `Projects/` and `Notes/` = no (they change too often and are large; let Claude read them on demand via the vault rules).
 - **Start Claude in the right folder.** Personal job apps → `personal/`. Cura work → `cura-connect/`. Framework changes → root.
 - **Need cross-area context once?** Just ask ("read Cura Connect's ICP"). It costs a turn but doesn't pollute every session.
+- **Daily notes and Project.md files are read on-demand, never `@imported`.** The obsidian rules file teaches Claude where they live and *when* to look (e.g. when you mention "today" or reference a project). Generic prompts unrelated to projects/areas/time don't trigger a vault dive.
 
 ## Wiring status
 
-| Area | `_context/` populated? | `@imports` wired? |
-|---|---|---|
-| Cura Connect | Yes (8 docs) | Yes |
-| Personal | No | Pending |
-| Max Nerdal AB | No | Pending |
-
-Update this table as the other areas come online.
+Tracked in the obsidian-integration project file in the vault: `Areas/Max Nerdal AB/Projects/max-ai-framework/max-ai-framework-obsidian.md`.

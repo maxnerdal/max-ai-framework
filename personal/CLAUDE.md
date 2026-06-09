@@ -4,7 +4,7 @@
 Max's personal Claude Code context. Primarily used for job applications: searching, applying, tracking, and preparing for interviews.
 
 ## Obsidian context (auto-loaded)
-*Vault `_context/` not populated yet — see `docs/obsidian-setup.md` "Next" list. Add `@~/Documents/obsidian-vault/Areas/Personal/_context/...` imports here once those docs exist.*
+*Vault `_context/` not populated yet — see `Areas/Max Nerdal AB/Projects/max-ai-framework/max-ai-framework-obsidian.md` in the vault for the build-out backlog. Add `@~/Documents/obsidian-vault/Areas/Personal/_context/...` imports here once those docs exist.*
 
 ## Architecture
 - `skills/` — atomic capabilities (cv-tailorer, job-tracker, drive-reader, etc.)
