@@ -73,5 +73,25 @@ The pivot: HOSP automation stays in Cura because Cura is the beneficiary, even t
 
 **Daily slice rule:** daily notes hold the day's *slice* of project work as wikilinks `[[Project-name]]`, not the full project checklist. The full checklist lives in the Project.md.
 
+## Backlog
+
+**Definition** (loaded passively):
+- Location: `Areas/{area}/Notes/Backlog.md`, one per area. Each is a Note (no `status:` frontmatter — won't appear in Bases kanban).
+- Two sections only: `## Dated` and `## No date`. No manual time-bucket sorting; `/morning` does that at display time.
+- Item format: `- [ ] YYYY-MM-DD — description` for dated; `- [ ] description` for undated.
+- `DEADLINE` keyword inside the line marks a hard deadline.
+
+**Triggers (conditional reads/writes):**
+- When user describes a future-dated todo or capture → append to right area's Backlog `## Dated` section. Chronological order is nice-to-have but not enforced.
+- When user describes an undated todo → append to right area's Backlog `## No date`.
+- When user marks something as a hard deadline → include `DEADLINE` keyword in the item.
+- When user says "what's due this week" / "what's coming" → read backlogs + project Plan checklists (looking for `DEADLINE` entries and dates).
+
+**Don't trigger when:** prompt is unrelated to planning/scheduling.
+
+**Date semantics:**
+- Bare dates (`2026-06-10 — ...`) are *soft targets* — guidance, never auto-pulled.
+- `DEADLINE`-marked items are *hard* — surfaced with 🚨 when within 7 days; auto-pulled into today's daily note on the deadline day.
+
 ## Access
 Use Read, Grep, and Glob over the vault path. The Obsidian CLI and QMD MCP are not installed; file reads cover the basics.

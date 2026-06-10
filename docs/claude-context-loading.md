@@ -90,6 +90,7 @@ cura-connect/CLAUDE.md                   ← area context
 - **Start Claude in the right folder.** Personal job apps → `personal/`. Cura work → `cura-connect/`. Framework changes → root.
 - **Need cross-area context once?** Just ask ("read Cura Connect's ICP"). It costs a turn but doesn't pollute every session.
 - **Daily notes and Project.md files are read on-demand, never `@imported`.** The obsidian rules file teaches Claude where they live and *when* to look (e.g. when you mention "today" or reference a project). Generic prompts unrelated to projects/areas/time don't trigger a vault dive.
+- **Backlog files (`Areas/*/Notes/Backlog.md`) are read on-demand by `/morning` and when the user asks about scheduling.** Not auto-loaded. Conventions in `.claude/rules/obsidian.md` `## Backlog`.
 
 ## Wiring status
 
