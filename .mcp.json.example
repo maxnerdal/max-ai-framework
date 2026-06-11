@@ -1,0 +1,12 @@
+{
+  "_comment": "Project-scope MCP template. For typical use, prefer user scope: `claude mcp add -s user ...` (see docs/google-workspace-mcp-setup.md step 4). Copy this file to `.mcp.json` (in any repo root) ONLY if you want the workspace-mcp registration scoped to a single project. Do NOT copy to ~/.claude/mcp.json — that path is not read by Claude Code. Replace the absolute path below with your own home directory if you're not maxnerdal.",
+  "mcpServers": {
+    "workspace-mcp": {
+      "command": "uvx",
+      "args": ["workspace-mcp", "--single-user"],
+      "env": {
+        "GOOGLE_CLIENT_SECRET_PATH": "/Users/maxnerdal/.config/max-ai-framework/google-oauth-client.json"
+      }
+    }
+  }
+}

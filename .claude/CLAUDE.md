@@ -20,3 +20,6 @@ Obsidian is the single source of truth for all project context, brand informatio
 - Concise responses — no trailing summaries, no restating what was just done
 - No emojis
 - No unnecessary comments in code
+
+## Gmail and Google Calendar
+Always use the `workspace-mcp` tools (they take a required `user_google_email` argument), never the hosted `mcp__claude_ai_Gmail__*` / `mcp__claude_ai_Google_Calendar__*` connectors. The hosted connectors are single-account and silently route to the wrong inbox. Accounts: `maxnerdal@gmail.com` (Personal), `max.nerdal@curaconnect.se` (Cura Connect).
