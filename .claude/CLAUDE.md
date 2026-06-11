@@ -4,17 +4,12 @@
 Max Nerdal, Swedish developer. I work at Cura Connect AB (curaconnect.se) and run Max Nerdal AB as a consultant. Primary spoken language is Swedish; code and technical communication in English.
 
 ## My AI framework
-This global config is part of `max-ai-framework` — a personal framework with skills, agents, and workflows across several contexts:
+This global config is part of `max-ai-framework` — a shared toolkit at `~/Documents/max-ai-framework/` providing skills, agents, commands, workflows, prompts, templates, and MCP servers across all my work. Symlinked into `~/.claude/`.
 
-- `personal/` — job applications, CV, Drive integration
-- `cura-connect/` — work automation for Cura Connect AB
-- `max-nerdal-ab/` — consulting work
-- `claude-cowork/Scheduled/` — Cowork scheduled tasks
-
-When working inside one of these folders, that folder's CLAUDE.md has the relevant context.
+App code lives in its own repo per app (e.g. `~/Documents/hosp-automation/`, `~/Documents/tradingbots/`, future portfolio site). Each app repo's `CLAUDE.md` `@imports` the relevant Obsidian area context for that work.
 
 ## Obsidian — Second Brain
-Obsidian is the single source of truth for all project context, brand information, strategy docs, meeting notes, and business knowledge.
+Obsidian vault at `~/Documents/obsidian-vault/` is the single source of truth for business knowledge, brand information, strategy docs, meeting notes, and project state. Areas: Cura Connect, Max Nerdal AB, Personal. Loading rules in `~/.claude/rules/obsidian.md`.
 
 ## General preferences
 - Concise responses — no trailing summaries, no restating what was just done

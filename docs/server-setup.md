@@ -142,15 +142,6 @@ ls -la ~/.claude/CLAUDE.md ~/.claude/agents ~/.claude/commands
 ```
 Each line should show `->` pointing into `~/max-ai-framework/.claude/`.
 
-### Symlink Cowork scheduled tasks (manual on this server)
-The Cowork desktop app reads scheduled tasks from `~/Documents/Claude/Scheduled`. This always-on server is where the schedule actually runs, so point that path at the repo's `claude-cowork/Scheduled/` — combined with the LaunchAgent in Step 5, this means any task you create in Cowork auto-commits to GitHub:
-```bash
-mkdir -p ~/Documents/Claude
-ln -s ~/max-ai-framework/claude-cowork/Scheduled ~/Documents/Claude/Scheduled
-```
-
-> Note: This symlink is no longer created by `setup.sh` — it's manual because not every machine using this repo wants Cowork tasks tied to the repo. On the always-on server, you do.
-
 ### Set up GitHub SSH authentication for auto-push
 ```bash
 # Generate SSH key on the server MacBook
@@ -172,73 +163,9 @@ ssh -T git@github.com
 
 ---
 
-## Step 5 — Set up auto-sync LaunchAgent for scheduled tasks (remote, via SSH)
+## Step 5 — Log in to services + enable scheduled tasks (remote, via Screen Sharing)
 
-Watches `claude-cowork/Scheduled/` and auto-commits + pushes to GitHub when tasks change.
-
-**1. Create the sync script**
-```bash
-mkdir -p ~/max-ai-framework/scripts
-
-cat > ~/max-ai-framework/scripts/sync-scheduled-tasks.sh << 'EOF'
-#!/bin/bash
-REPO="$HOME/max-ai-framework"
-cd "$REPO" || exit 1
-
-if ! git diff --quiet claude-cowork/Scheduled/ || git ls-files --others --exclude-standard claude-cowork/Scheduled/ | grep -q .; then
-  git add claude-cowork/Scheduled/
-  git commit -m "Auto-sync: update scheduled tasks $(date '+%Y-%m-%d %H:%M')"
-  git push origin master
-fi
-EOF
-
-chmod +x ~/max-ai-framework/scripts/sync-scheduled-tasks.sh
-```
-
-**2. Create the LaunchAgent**
-```bash
-cat > ~/Library/LaunchAgents/com.maxnerdal.sync-scheduled-tasks.plist << EOF
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.maxnerdal.sync-scheduled-tasks</string>
-    <key>ProgramArguments</key>
-    <array>
-        <string>/bin/bash</string>
-        <string>/Users/$(whoami)/max-ai-framework/scripts/sync-scheduled-tasks.sh</string>
-    </array>
-    <key>StartInterval</key>
-    <integer>300</integer>
-    <key>RunAtLoad</key>
-    <true/>
-    <key>StandardOutPath</key>
-    <string>/tmp/sync-scheduled-tasks.log</string>
-    <key>StandardErrorPath</key>
-    <string>/tmp/sync-scheduled-tasks.error.log</string>
-</dict>
-</plist>
-EOF
-
-launchctl load ~/Library/LaunchAgents/com.maxnerdal.sync-scheduled-tasks.plist
-```
-
-**3. Verify**
-```bash
-launchctl list | grep sync-scheduled-tasks
-cat /tmp/sync-scheduled-tasks.log
-```
-
-### To stop/restart
-```bash
-launchctl unload ~/Library/LaunchAgents/com.maxnerdal.sync-scheduled-tasks.plist
-launchctl load ~/Library/LaunchAgents/com.maxnerdal.sync-scheduled-tasks.plist
-```
-
----
-
-## Step 6 — Log in to services + enable scheduled tasks (remote, via Screen Sharing)
+Cowork tasks are managed in Claude.ai's Scheduled Tasks UI (no longer mirrored into this repo — see vault `[[max-ai-framework-flatten]]`).
 
 Use Screen Sharing (vnc://100.x.x.x) to open Chrome and log in to:
 - [app.bemlo.com](https://app.bemlo.com) — for Bemlo tender monitoring tasks
@@ -250,7 +177,7 @@ Then in the Claude desktop app:
 
 ---
 
-## Step 7 — Plug in headless display dummy plug (when delivered)
+## Step 6 — Plug in headless display dummy plug (when delivered)
 
 Order from **Amazon.se** or **Komplett.se** — search `HDMI dummy plug headless`, around 50–100 kr.
 

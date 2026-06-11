@@ -1,18 +1,17 @@
 # How Claude Code Loads Context
 
-This doc explains *what* Claude knows about when you start a session, and *why*. It's the map for keeping global config lean and area sessions rich.
+This doc explains *what* Claude knows about when you start a session, and *why*. Use it to keep global config lean and per-app sessions rich.
 
 ---
 
-## The three loading rules
+## The four loading rules
 
-1. **Walks up, not down.** Claude loads `CLAUDE.md` from the current working directory, then walks upward to parents and home. It does **not** descend into subfolders.
-2. **`~/.claude/` is global.** Anything there loads in every session, regardless of CWD.
-3. **`@imports` pull other files into context eagerly.** Use them in a `CLAUDE.md` to load adjacent docs (e.g. vault context) without waiting for Claude to search.
+1. **`CLAUDE.md` walks up, not down.** Claude reads `CLAUDE.md` from the CWD, then walks upward to parents and home. It does **not** descend into subfolders.
+2. **`~/.claude/` is global.** Anything there (`CLAUDE.md`, `rules/*.md`, `agents/`, `commands/`, `skills/`) loads in every session, regardless of CWD.
+3. **Project `.claude/` overlays the global one.** Claude looks for a single project `.claude/` walking up from CWD. Intermediate `.claude/` directories along the path are **not** merged — only the closest one + `~/.claude/`.
+4. **`@imports` in CLAUDE.md pull other files into context eagerly.** Use them to load adjacent docs (e.g. Obsidian vault context) without waiting for Claude to search.
 
-There's a fourth, less-documented behavior worth knowing:
-
-4. **`~/.claude/rules/*.md` is auto-loaded globally.** Files in this folder act like extensions of the global `CLAUDE.md` — convention-based, no `@import` needed. Use it for cross-context rules (e.g. how to use the Obsidian vault).
+`~/.claude/rules/*.md` is auto-loaded globally — convention-based, no `@import` needed. Use it for cross-context rules (e.g. how to use the Obsidian vault).
 
 ---
 
@@ -22,76 +21,74 @@ There's a fourth, less-documented behavior worth knowing:
 ~/
 ├── .claude/
 │   ├── CLAUDE.md  ──────────► symlink → max-ai-framework/.claude/CLAUDE.md
-│   └── rules/    ──────────► symlink → max-ai-framework/.claude/rules/
+│   ├── agents/    ──────────► symlink → max-ai-framework/.claude/agents/
+│   ├── commands/  ──────────► symlink → max-ai-framework/.claude/commands/
+│   └── rules/     ──────────► symlink → max-ai-framework/.claude/rules/
 │       └── obsidian.md         (auto-loaded global rule)
 │
 └── Documents/
-    ├── max-ai-framework/
-    │   ├── CLAUDE.md              (project root — framework map)
-    │   ├── .claude/
-    │   │   ├── CLAUDE.md          (global "who I am")
-    │   │   └── rules/
-    │   │       └── obsidian.md
-    │   ├── cura-connect/
-    │   │   └── CLAUDE.md          (area + @imports to vault)
-    │   ├── personal/
-    │   │   └── CLAUDE.md          (area — imports pending)
-    │   └── max-nerdal-ab/
-    │       └── CLAUDE.md          (area — imports pending)
+    ├── max-ai-framework/         (shared toolkit — no app code)
+    │   ├── CLAUDE.md             (framework map)
+    │   ├── .claude/              (global config, symlinked above)
+    │   ├── skills/               (cv-tailorer, drive-reader, job-tracker, ...)
+    │   ├── workflows/            (job-application, interview-prep, ...)
+    │   ├── prompts/, templates/, mcp-servers/
+    │   └── docs/
     │
-    └── obsidian-vault/
+    ├── hosp-automation/          (app repo — Cura HOSP cert automation)
+    │   ├── CLAUDE.md             (Cura @imports for this pipeline)
+    │   └── scripts/, SKILL.md, WORKFLOW.md, ...
+    │
+    ├── tradingbots/              (app repo — own CLAUDE.md)
+    │
+    └── obsidian-vault/           (second brain)
         └── Areas/
-            ├── Cura Connect/
-            │   ├── _context/      ──► imported by cura-connect/CLAUDE.md
-            │   ├── Projects/         (read on demand)
-            │   └── Notes/            (read on demand)
-            ├── Personal/
-            │   └── _context/         (not yet populated)
-            └── Max Nerdal AB/
-                └── _context/         (not yet populated)
+            ├── Cura Connect/_context/      (imported by hosp-automation CLAUDE.md)
+            ├── Max Nerdal AB/_context/     (imported by future MNAB app repos)
+            └── Personal/_context/          (imported by personal-side workflows)
 ```
 
 ---
 
 ## What loads when
 
-### Start in `~/Documents/max-ai-framework/` (root)
+### Start in `~/Documents/max-ai-framework/` (the toolkit itself)
 ```
 ~/.claude/CLAUDE.md                      ← global "who I am"
 ~/.claude/rules/obsidian.md              ← vault location + search rules
 max-ai-framework/CLAUDE.md               ← framework map
 ```
-**Claude knows:** Max's identity, the framework structure, the vault exists.
-**Claude does *not* know:** Cura Connect's brand voice, ICP, services. Has to search the vault to find them.
+**Claude knows:** Max's identity, the framework structure, the vault exists, all global skills/agents/commands.
 
-### Start in `~/Documents/max-ai-framework/cura-connect/`
+### Start in `~/Documents/hosp-automation/` (the Cura HOSP automation app)
 ```
 ~/.claude/CLAUDE.md                      ← global "who I am"
 ~/.claude/rules/obsidian.md              ← vault location + search rules
-max-ai-framework/CLAUDE.md               ← framework map (walked up)
-cura-connect/CLAUDE.md                   ← area context
-  └── @ vault/Areas/Cura Connect/_context/About.md
-  └── @ vault/Areas/Cura Connect/_context/BrandGuidelines.md
-  └── @ vault/Areas/Cura Connect/_context/Glossary.md
-  └── @ vault/Areas/Cura Connect/_context/ICP.md
+hosp-automation/CLAUDE.md                ← app context
   └── @ vault/Areas/Cura Connect/_context/Operations.md
   └── @ vault/Areas/Cura Connect/_context/Recman.md
-  └── @ vault/Areas/Cura Connect/_context/Services.md
-  └── @ vault/Areas/Cura Connect/_context/Values.md
+  └── @ vault/Areas/Cura Connect/Projects/.../curaconnect-ai-framework-IVO-HOSP.md
++ hosp-automation/.claude/commands/hosp.md  (the /hosp slash command)
 ```
-**Claude knows:** all of the above, plus full Cura Connect business context.
+**Claude knows:** all of the above, plus the HOSP pipeline's specific context and the `/hosp` command, plus all global skills/agents/commands from `~/.claude/`.
+
+### Start in any new app repo
+Same pattern: write a `CLAUDE.md` in the app repo root with `@imports` pulling the relevant Obsidian area context. Global tools come for free.
 
 ---
 
 ## Practical rules of thumb
 
-- **Lean global, rich areas.** Global (`~/.claude/CLAUDE.md` + `rules/`) should be small — it loads every session. Area folders carry the heavy `@imports`.
-- **`@import` only the canonical and stable.** `_context/` files = yes. `Projects/` and `Notes/` = no (they change too often and are large; let Claude read them on demand via the vault rules).
-- **Start Claude in the right folder.** Personal job apps → `personal/`. Cura work → `cura-connect/`. Framework changes → root.
+- **Lean global, rich apps.** Global `~/.claude/CLAUDE.md` + `rules/` is small — it loads every session. Per-app CLAUDE.md carries the heavy `@imports` for that app's domain.
+- **`@import` only the canonical and stable.** `_context/` files = yes. `Projects/` and `Notes/` = no — they change too often and are large; let Claude read them on demand via the vault rules.
+- **Start Claude in the app's repo, not in the framework.** Working on hosp-automation? `cd ~/Documents/hosp-automation && claude`. Working on the toolkit itself? `cd ~/Documents/max-ai-framework && claude`.
 - **Need cross-area context once?** Just ask ("read Cura Connect's ICP"). It costs a turn but doesn't pollute every session.
-- **Daily notes and Project.md files are read on-demand, never `@imported`.** The obsidian rules file teaches Claude where they live and *when* to look (e.g. when you mention "today" or reference a project). Generic prompts unrelated to projects/areas/time don't trigger a vault dive.
-- **Backlog files (`Areas/*/Notes/Backlog.md`) are read on-demand by `/morning` and when the user asks about scheduling.** Not auto-loaded. Conventions in `.claude/rules/obsidian.md` `## Backlog`.
+- **Daily notes and Project.md files are read on-demand**, never `@imported`. The obsidian rules teach Claude where they live and *when* to look (e.g. when you mention "today" or reference a project). Generic prompts unrelated to projects/areas/time don't trigger a vault dive.
+- **Backlog files (`Areas/*/Notes/Backlog.md`) are read on-demand by `/morning`** and when the user asks about scheduling. Not auto-loaded.
+
+## Why no area folders inside the framework?
+Earlier versions had `personal/`, `cura-connect/`, `max-nerdal-ab/` subfolders each with their own CLAUDE.md and skills. That was reverted on 2026-06-11 — Claude Code doesn't merge intermediate `.claude/` directories along the walk-up path, so per-area tools at `<area>/.claude/skills/` wouldn't have been discovered from a deeper CWD anyway. The canonical pattern is `~/.claude/` + per-app `CLAUDE.md`. See vault `[[max-ai-framework-flatten]]` for the full reasoning.
 
 ## Wiring status
 
-Tracked in the obsidian-integration project file in the vault: `Areas/Max Nerdal AB/Projects/max-ai-framework/max-ai-framework-obsidian.md`.
+Tracked in the vault: `Areas/Max Nerdal AB/Projects/max-ai-framework/max-ai-framework-obsidian.md`.

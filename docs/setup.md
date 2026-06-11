@@ -38,16 +38,15 @@ claude
 
 Follow the prompts to log in with your Anthropic account.
 
-## 5. Copy config files and fill in credentials
-
-Each context has its own config:
+## 5. Copy config and fill in credentials
 
 ```bash
-cp personal/config.example.md personal/config.md
-cp cura-connect/config.example.md cura-connect/config.md
+cp config.example.md config.md
 ```
 
-Open each `config.md` and fill in API keys, Drive IDs, and credential paths. These files are gitignored and will never be committed.
+Open `config.md` and fill in Google Drive IDs and OAuth paths. The file is gitignored.
+
+App-specific repos (e.g. `~/Documents/hosp-automation/`) carry their own gitignored `config.md` with that app's secrets.
 
 ## Optional: dedicated server setup
 
