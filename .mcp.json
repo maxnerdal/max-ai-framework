@@ -3,7 +3,7 @@
     "gdrive": {
       "type": "stdio",
       "command": "node",
-      "args": ["mcp-servers/gdrive/index.js"],
+      "args": ["mcp-servers/gdrive-s/index.js"],
       "env": {
         "GDRIVE_OAUTH_PATH": "/Users/maxnerdal/.config/claude/gcp-oauth.keys.json",
         "GDRIVE_CREDENTIALS_PATH": "/Users/maxnerdal/.config/claude/.gdrive-server-credentials.json"

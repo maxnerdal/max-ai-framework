@@ -75,11 +75,11 @@ Reading calendar + Gmail for an area requires its Google account to be connected
 
 ## Companion command
 
-`/sweep` is the end-of-day closer for this workflow. It reads checked todos out of today's briefing and removes the matching lines from each area's `Backlog.md`. The daily note keeps its checked-off history; the backlog gets the open items only.
+`/sweep-s` is the end-of-day closer for this workflow. It reads checked todos out of today's briefing and removes the matching lines from each area's `Backlog.md`. The daily note keeps its checked-off history; the backlog gets the open items only.
 
 ## Out of scope for this command
 
 - **Two-way calendar** (creating events from todos) — read-only.
 - **Email auto-triage** (which need reply) — listing unread is in scope, classification is not.
 - **Cowork monitor state** — separate future iteration.
-- **Scheduled routine** — manual `/morning` only for now.
+- **Scheduled routine** — manual `/morning-s` only for now.

@@ -6,17 +6,19 @@ Max Nerdal's personal AI framework. Shared library of skills, agents, commands, 
 
 ```
 max-ai-framework/
-  .claude/              — Symlinked to ~/.claude/ (CLAUDE.md, agents, commands, rules, settings)
-  skills/               — Atomic capabilities (cv-tailorer, drive-reader, job-tracker, ...)
-  workflows/            — Multi-step orchestrations (job-application, interview-prep, ...)
-  prompts/              — Shared writing principles used by skills
-  templates/            — HTML templates (CV, letter, job-post)
-  mcp-servers/gdrive/   — Custom Google Drive MCP server (Node)
-  docs/                 — Setup guides + reference material
-  .mcp.json[.example]   — MCP server configs
-  config.example.md     — Drive IDs / OAuth paths template (config.md is gitignored)
-  setup.sh              — Creates ~/.claude/ symlinks on a new machine
+  .claude/                 — Symlinked to ~/.claude/ (CLAUDE.md, agents, commands, rules, settings)
+  skills/                  — Atomic capabilities (drive-reader-s, cv-tailorer-p, job-tracker-p, ...)
+  workflows/               — Multi-step orchestrations (job-application-p, interview-prep-p, ...)
+  prompts/                 — Shared writing principles (tailoring-principles-p.md, ...)
+  templates/               — HTML templates (cv-p.html, letter-p.html, job-post-p.html)
+  mcp-servers/gdrive-s/    — Custom Google Drive MCP server (Node)
+  docs/                    — Setup guides + reference material
+  .mcp.json[.example]      — MCP server configs
+  config.example.md        — Drive IDs / OAuth paths template (config.md is gitignored)
+  setup.sh                 — Creates ~/.claude/ symlinks on a new machine
 ```
+
+**Suffix convention:** every skill, agent, command, workflow, prompt, and template is tagged by primary beneficiary so the framework can later be split per area without grepping. `-cc` Cura Connect, `-p` Personal, `-mn` Max Nerdal AB, `-s` Shared cross-area. See [CLAUDE.md](CLAUDE.md) for the full rule.
 
 ## Design principles
 

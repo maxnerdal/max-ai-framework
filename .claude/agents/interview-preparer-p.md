@@ -1,5 +1,5 @@
 ---
-name: interview-preparer
+name: interview-preparer-p
 description: Prepares for a job interview. Reads the tracker to find jobs with Interview status, lets the user pick which one, then researches the company and generates a comprehensive prep document saved to Drive. Use when a job has been moved to Interview status or when the user wants to prepare for an upcoming interview.
 model: opus
 tools: Read, Glob, WebFetch, WebSearch, Bash
@@ -58,7 +58,7 @@ Use `WebSearch` to find:
 Aim for quality over quantity — focus on things the user can naturally reference in conversation.
 
 ### Step 5: Generate the prep document
-Follow the interview-prepper skill at `/Users/maxnerdal/Documents/max-ai-framework/skills/interview-prepper/SKILL.md`.
+Follow the interview-prepper skill at `/Users/maxnerdal/Documents/max-ai-framework/skills/interview-prepper-p/SKILL.md`.
 
 Produce a complete prep document with:
 - Company overview (synthesized from research)
@@ -84,7 +84,7 @@ Create the prep doc inside it:
 - parent_id: [application folder ID]
 - content: the full prep document
 
-If no application folder exists (user applied outside this framework), create one following the naming convention from `/Users/maxnerdal/Documents/max-ai-framework/prompts/drive-output-conventions.md`.
+If no application folder exists (user applied outside this framework), create one following the naming convention from `/Users/maxnerdal/Documents/max-ai-framework/prompts/drive-output-conventions-p.md`.
 
 ## How to report completion
 

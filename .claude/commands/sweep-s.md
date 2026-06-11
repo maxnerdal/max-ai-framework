@@ -1,10 +1,10 @@
-End-of-day backlog cleanup and daily-log finalization. Read checked todos out of today's morning briefing, remove the matching lines from each area's `Backlog.md`, then append a `## What got done` section to today's daily note recording git activity and any deferred todos. Pair to `/morning`.
+End-of-day backlog cleanup and daily-log finalization. Read checked todos out of today's morning briefing, remove the matching lines from each area's `Backlog.md`, then append a `## What got done` section to today's daily note recording git activity and any deferred todos. Pair to `/morning-s`.
 
 ## Why this exists
 
 The morning briefing captures the **plan**. By itself it never becomes a record of what actually happened — checked items pile up in the briefing, but the daily note still reads the same as it did at 9am. `/sweep` closes the loop:
 
-1. Backlog cleanup — `/morning` pulls dated backlog items into the briefing as `- [ ]` checkboxes; throughout the day they get ticked off. Without a sweep, those same items would re-appear in tomorrow's briefing. The daily note IS the history (rule from `~/.claude/rules/obsidian.md`), so checked items stay there untouched; only the backlog is mutated.
+1. Backlog cleanup — `/morning-s` pulls dated backlog items into the briefing as `- [ ]` checkboxes; throughout the day they get ticked off. Without a sweep, those same items would re-appear in tomorrow's briefing. The daily note IS the history (rule from `~/.claude/rules/obsidian.md`), so checked items stay there untouched; only the backlog is mutated.
 2. Daily-log finalization — at end of day, the daily note should be an accurate record of what got done. Git activity (commits across all known repos today) is captured automatically, and any unchecked planned todos are surfaced as deferred. Combined with the hand-written area sections, the file becomes a real ledger.
 3. Area-capture routing — the top-level `## <Area>` h2 sections collect free-form thoughts during the day. Without a sweep, those notes only ever live in the daily note and never reach a persistent home (Project anchor, area Notes, Backlog). Sweep walks each capture and asks where it belongs, per the idea-routing rule in `~/.claude/rules/obsidian.md`.
 
@@ -22,7 +22,7 @@ The morning briefing captures the **plan**. By itself it never becomes a record 
    - Path: `~/Documents/obsidian-vault/Areas/{Area}/Notes/Backlog.md`.
    - Find the line that reads `- [ ] <content>` (exact match against the captured content, after stripping 🚨 from the briefing line).
    - Delete that line.
-   - If no match is found, log a warning naming the item and which backlog was searched — do **not** delete arbitrary lines. A missed match usually means the user edited the backlog text after `/morning` ran; surfacing it lets them clean it up by hand.
+   - If no match is found, log a warning naming the item and which backlog was searched — do **not** delete arbitrary lines. A missed match usually means the user edited the backlog text after `/morning-s` ran; surfacing it lets them clean it up by hand.
 
 6. **Collect today's git activity.** Glob `~/Documents/*/.git` (depth 1) to discover repos. For each repo, run `git -C <repo> log --since="00:00" --until="now" --all --pretty=format:'%h %s'` to capture every commit authored today on any branch. No author filter (single-user machine). Skip repos with zero commits silently. Capture the current default branch name per repo via `git -C <repo> symbolic-ref --short HEAD` for the display label (best-effort; fall back to "various" if detached or unclear).
 
