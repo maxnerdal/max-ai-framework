@@ -76,22 +76,27 @@ The pivot: HOSP automation stays in Cura because Cura is the beneficiary, even t
 ## Backlog
 
 **Definition** (loaded passively):
-- Location: `Areas/{area}/Notes/Backlog.md`, one per area. Each is a Note (no `status:` frontmatter — won't appear in Bases kanban).
-- Two sections only: `## Dated` and `## No date`. No manual time-bucket sorting; `/morning` does that at display time.
-- Item format: `- [ ] YYYY-MM-DD — description` for dated; `- [ ] description` for undated.
-- `DEADLINE` keyword inside the line marks a hard deadline.
+- Backlog lives in **Google Tasks** since 2026-06-16 (was `Areas/{area}/Notes/Backlog.md`, now stub-only). One list per area:
+  - Personal — Backlog (`QVRXVU1FdUNySGdiVm5nNA`) on `maxnerdal@gmail.com`
+  - Cura Connect — Backlog (`eGItTmM3S0NiTC0tcm15Qg`) on `max.nerdal@curaconnect.se`
+  - Cura Connect — Recurring (`X0d1X0RLQTE4Yk9FN1RZag`) on `max.nerdal@curaconnect.se` — admin auto-fired payroll/invoice/quarterly reminders, pre-seeded through ~2027-06-30. See [[Recurring deadlines]] in Cura Notes.
+  - Max Nerdal AB — *(no list yet)*
+- Task `due` populated → "dated"; `due` empty → "undated". Add/edit/check off in `tasks.google.com`, the Google Calendar sidebar, or the Tasks mobile app.
+- Hard-deadline convention: prefix task title with `🚨 DEADLINE —` (case-insensitive substring match on `DEADLINE` is what `/morning-s` looks for).
 
 **Triggers (conditional reads/writes):**
-- When user describes a future-dated todo or capture → append to right area's Backlog `## Dated` section. Chronological order is nice-to-have but not enforced.
-- When user describes an undated todo → append to right area's Backlog `## No date`.
-- When user marks something as a hard deadline → include `DEADLINE` keyword in the item.
-- When user says "what's due this week" / "what's coming" → read backlogs + project Plan checklists (looking for `DEADLINE` entries and dates).
+- When user describes a future-dated todo or capture → create a task with `due` set on the right area's list via `mcp__workspace-mcp__manage_task` (action=create).
+- When user describes an undated todo → same call, omit `due`.
+- When user marks something as a hard deadline → prefix title with `🚨 DEADLINE —`.
+- When user says "what's due this week" / "what's coming" → `list_tasks` with `due_max={today+7d}` across the area's lists + check project Plan checklists for `DEADLINE` entries.
 
 **Don't trigger when:** prompt is unrelated to planning/scheduling.
 
 **Date semantics:**
-- Bare dates (`2026-06-10 — ...`) are *soft targets* — guidance, never auto-pulled.
-- `DEADLINE`-marked items are *hard* — surfaced with 🚨 when within 7 days; auto-pulled into today's daily note on the deadline day.
+- Bare `due` dates are *soft targets* — surfaced in the briefing when ≤ today, never auto-pulled before.
+- `DEADLINE`-titled tasks are *hard* — surfaced with 🚨 when within 7 days; auto-pulled into today's daily note on the deadline day.
+
+**Sync model:** `/morning-s` writes briefing rows as `- [ ] YYYY-MM-DD — title <!-- gt:TASK_ID -->`. `/sweep-s` reconciles bidirectionally at EOD: briefing `[x]` → Tasks completed via embedded ID, and Tasks completed-today → flip briefing `[ ]` to `[x]`. See [[max-ai-framework-tasks-backed-backlog]] for the full migration log.
 
 ## Access
 Use Read, Grep, and Glob over the vault path. The Obsidian CLI and QMD MCP are not installed; file reads cover the basics.
