@@ -24,7 +24,7 @@ plain text. To write proper rows and columns, always use the `sheets.py` script 
 
 ```
 1. Read config.md → get DRIVE_JOB_TRACKER_ID
-2. Run: python skills/job-tracker/scripts/sheets.py read <DRIVE_JOB_TRACKER_ID>
+2. Run: python ${CLAUDE_SKILL_DIR}/scripts/sheets.py read <DRIVE_JOB_TRACKER_ID>
 3. Output is a JSON array of arrays — parse into rows
 ```
 
@@ -39,14 +39,14 @@ Always read the current state first, modify rows in memory, re-sort, then write 
 1. Read current sheet (see above)
 2. Make changes (add row, update status, re-sort)
 3. Write back:
-   python skills/job-tracker/scripts/sheets.py write <DRIVE_JOB_TRACKER_ID> '<rows_json>'
+   python ${CLAUDE_SKILL_DIR}/scripts/sheets.py write <DRIVE_JOB_TRACKER_ID> '<rows_json>'
    where rows_json is a JSON array of arrays including the header row
 ```
 
 ### Appending a single new row
 
 ```
-python skills/job-tracker/scripts/sheets.py append <DRIVE_JOB_TRACKER_ID> '<row_json>'
+python ${CLAUDE_SKILL_DIR}/scripts/sheets.py append <DRIVE_JOB_TRACKER_ID> '<row_json>'
 where row_json is a JSON array of 9 values in column order
 ```
 

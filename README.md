@@ -6,8 +6,8 @@ Max Nerdal's personal AI framework. Shared library of skills, agents, commands, 
 
 ```
 max-ai-framework/
-  .claude/                 — Symlinked to ~/.claude/ (CLAUDE.md, agents, commands, rules, settings)
-  skills/                  — Atomic capabilities (drive-reader-s, cv-tailorer-p, job-tracker-p, ...)
+  .claude/                 — Symlinked to ~/.claude/ (CLAUDE.md, agents, commands, rules, skills, settings)
+    skills/                — Atomic capabilities (drive-reader-s, cv-tailorer-p, job-tracker-p, ...)
   workflows/               — Multi-step orchestrations (job-application-p, interview-prep-p, ...)
   prompts/                 — Shared writing principles (tailoring-principles-p.md, ...)
   templates/               — HTML templates (cv-p.html, letter-p.html, job-post-p.html)

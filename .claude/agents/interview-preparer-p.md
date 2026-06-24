@@ -58,7 +58,7 @@ Use `WebSearch` to find:
 Aim for quality over quantity — focus on things the user can naturally reference in conversation.
 
 ### Step 5: Generate the prep document
-Follow the interview-prepper skill at `/Users/maxnerdal/Documents/max-ai-framework/skills/interview-prepper-p/SKILL.md`.
+Follow the interview-prepper skill at `/Users/maxnerdal/Documents/max-ai-framework/.claude/skills/interview-prepper-p/SKILL.md`.
 
 Produce a complete prep document with:
 - Company overview (synthesized from research)

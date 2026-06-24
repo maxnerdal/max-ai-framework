@@ -42,11 +42,12 @@ echo ""
 # We do NOT symlink the whole ~/.claude/ — Claude Code writes runtime files
 # (projects/, sessions/, mcp.json, settings.json, ...) into ~/.claude/ that
 # should not land in the repo.
-info "Linking ~/.claude/CLAUDE.md, agents/, commands/, rules/"
+info "Linking ~/.claude/CLAUDE.md, agents/, commands/, rules/, skills/"
 backup_and_link "$HOME/.claude/CLAUDE.md" "$REPO_DIR/.claude/CLAUDE.md"
 backup_and_link "$HOME/.claude/agents"    "$REPO_DIR/.claude/agents"
 backup_and_link "$HOME/.claude/commands"  "$REPO_DIR/.claude/commands"
 backup_and_link "$HOME/.claude/rules"     "$REPO_DIR/.claude/rules"
+backup_and_link "$HOME/.claude/skills"    "$REPO_DIR/.claude/skills"
 
 # Source shell aliases from ~/.zshrc if not already done.
 ZSHRC="$HOME/.zshrc"

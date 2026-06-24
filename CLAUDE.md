@@ -4,8 +4,8 @@
 Max Nerdal's personal AI framework. Source of truth for Claude Code's shared library: skills, agents, commands, workflows, prompts, templates, and MCP servers. Symlinks into `~/.claude/` so the toolkit is available globally.
 
 ## Structure (flat shared library)
-- `.claude/` — symlinked to `~/.claude/`. Holds the global identity (`CLAUDE.md`), `agents/`, `commands/`, `rules/`, `settings.json`. Agents follow the same area-suffix convention: `application-drafter-p.md`, `application-finalizer-p.md`, `interview-preparer-p.md`. Commands: `morning-s.md`, `sweep-s.md`, `job-application-p.md`, `interview-prep-p.md`, `update-application-p.md`.
-- `skills/` — atomic capabilities. Shared: `drive-reader-s/`, `drive-writer-s/`. Personal: `cv-tailorer-p/`, `interview-prepper-p/`, `job-post-parser-p/`, `job-searcher-p/`, `job-tracker-p/`, `personal-letter-writer-p/`, `screening-answerer-p/`.
+- `.claude/` — symlinked to `~/.claude/`. Holds the global identity (`CLAUDE.md`), `agents/`, `commands/`, `rules/`, `skills/`, `settings.json`. Agents follow the same area-suffix convention: `application-drafter-p.md`, `application-finalizer-p.md`, `interview-preparer-p.md`. Commands: `morning-s.md`, `sweep-s.md`, `job-application-p.md`, `interview-prep-p.md`, `update-application-p.md`.
+- `.claude/skills/` — atomic capabilities, each as `<name>/SKILL.md` with frontmatter. Shared: `drive-reader-s/`, `drive-writer-s/`. Personal: `cv-tailorer-p/`, `interview-prepper-p/`, `job-post-parser-p/`, `job-searcher-p/`, `job-tracker-p/`, `personal-letter-writer-p/`, `screening-answerer-p/`. Auto-discoverable across projects via the `~/.claude/skills/` symlink.
 - `workflows/` — multi-step orchestrations. `job-application-p/`, `interview-prep-p/`, `update-application-p/`.
 - `prompts/` — shared writing principles. `drive-output-conventions-p.md`, `source-material-loader-p.md`, `tailoring-principles-p.md`.
 - `templates/` — HTML templates. `cv-p.html`, `letter-p.html`, `job-post-p.html`.

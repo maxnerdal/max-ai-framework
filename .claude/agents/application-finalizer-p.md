@@ -39,7 +39,7 @@ Save the returned folder ID — all documents go inside it.
 Use the gdrive.py script to copy the source CV:
 
 ```bash
-python3 /Users/maxnerdal/Documents/max-ai-framework/skills/drive-writer-s/scripts/gdrive.py \
+python3 /Users/maxnerdal/Documents/max-ai-framework/.claude/skills/drive-writer-s/scripts/gdrive.py \
   copy [DRIVE_CV_ID] "CV - [Company] - [Role]" [folder_id]
 ```
 
@@ -56,7 +56,7 @@ Make only the approved changes — do not rewrite sections that weren't in the s
 Use the gdrive.py script to copy the source personal letter:
 
 ```bash
-python3 /Users/maxnerdal/Documents/max-ai-framework/skills/drive-writer-s/scripts/gdrive.py \
+python3 /Users/maxnerdal/Documents/max-ai-framework/.claude/skills/drive-writer-s/scripts/gdrive.py \
   copy [DRIVE_PERSONAL_LETTER_ID] "Personligt brev - [Company] - [Role]" [folder_id]
 ```
 
@@ -87,14 +87,14 @@ Create the job post archive document:
 Use the sheets.py script to update the tracker. Read the current sheet first:
 
 ```bash
-python3 /Users/maxnerdal/Documents/max-ai-framework/skills/job-tracker-p/scripts/sheets.py \
+python3 /Users/maxnerdal/Documents/max-ai-framework/.claude/skills/job-tracker-p/scripts/sheets.py \
   read [DRIVE_JOB_TRACKER_ID]
 ```
 
 Find the row matching this company and role. If it exists, update Status to `Applied` and set Applied Date to today. If no row exists, append one:
 
 ```bash
-python3 /Users/maxnerdal/Documents/max-ai-framework/skills/job-tracker-p/scripts/sheets.py \
+python3 /Users/maxnerdal/Documents/max-ai-framework/.claude/skills/job-tracker-p/scripts/sheets.py \
   append [DRIVE_JOB_TRACKER_ID] \
   '["[Company]", "[Role]", "[URL]", "Applied", "", "[deadline]", "[today]", "", ""]'
 ```

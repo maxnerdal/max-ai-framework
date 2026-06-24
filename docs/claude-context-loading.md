@@ -30,7 +30,7 @@ This doc explains *what* Claude knows about when you start a session, and *why*.
     ├── max-ai-framework/         (shared toolkit — no app code)
     │   ├── CLAUDE.md             (framework map)
     │   ├── .claude/              (global config, symlinked above)
-    │   ├── skills/               (cv-tailorer, drive-reader, job-tracker, ...)
+    │   │   └── skills/           (cv-tailorer, drive-reader, job-tracker, ...)
     │   ├── workflows/            (job-application, interview-prep, ...)
     │   ├── prompts/, templates/, mcp-servers/
     │   └── docs/
