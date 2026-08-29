@@ -4,7 +4,8 @@
       "mcp__claude_ai_Google_Drive__search_files",
       "mcp__claude_ai_Google_Drive__get_file_metadata",
       "Bash(pdftotext *)",
-      "Bash(pdftoppm *)"
+      "Bash(pdftoppm *)",
+      "Bash(claude mcp list:*)"
     ]
   }
 }

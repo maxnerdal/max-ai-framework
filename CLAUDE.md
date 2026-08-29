@@ -9,7 +9,6 @@ Max Nerdal's personal AI framework. Source of truth for Claude Code's shared lib
 - `workflows/` — multi-step orchestrations. `job-application-p/`, `interview-prep-p/`, `update-application-p/`.
 - `prompts/` — shared writing principles. `drive-output-conventions-p.md`, `source-material-loader-p.md`, `tailoring-principles-p.md`.
 - `templates/` — HTML templates. `cv-p.html`, `letter-p.html`, `job-post-p.html`.
-- `mcp-servers/gdrive-s/` — custom Google Drive MCP server (Node).
 - `docs/` — setup guides and reference material.
 - `.mcp.json`, `.mcp.json.example` — project-scoped MCP configs.
 - `config.md` (gitignored), `config.example.md` — Drive IDs, OAuth paths.

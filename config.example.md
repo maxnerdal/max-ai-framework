@@ -36,3 +36,11 @@ DRIVE_PROFILE_PHOTO_ID=your-profile-photo-file-id
 ## Google Drive — Job Search
 DRIVE_JOB_PROFILE_ID=your-job-profile-doc-id
 DRIVE_JOB_TRACKER_ID=your-job-tracker-sheet-id
+
+## FPL — Fantasy Premier League
+FPL_TEAM_ID=your-fpl-team-id
+FPL_PROJECT_DOC=~/Documents/obsidian-vault/Areas/Personal/Projects/YourTeamName.md
+# Session cookies from browser DevTools → Application → Cookies → fantasy.premierleague.com
+# Required for live pre-deadline lineup. See .claude/commands/fpl-p.md.
+FPL_PL_PROFILE_COOKIE=
+FPL_SESSIONID_COOKIE=
