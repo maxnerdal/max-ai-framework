@@ -19,3 +19,6 @@
 
 # macOS
 .DS_Store
+
+# Claude Code synced-skills cache (managed by the harness)
+.claude/skills/synced/
