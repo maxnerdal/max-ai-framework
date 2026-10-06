@@ -180,7 +180,9 @@ Det där är kalibrerings-benchmarken. All process-text ska låta *ungefär* så
 - Korta, konkreta meningar.
 - Vardagliga ord ("putsar", "typ", "sen", "så").
 - Direkta verb.
-- Kod-referenser till specifika rader (`mincut.py` rad 17) för trovärdighet.
+- Inga radhänvisningar till koden ("rad 17", "mincut.py rad 50–51") i presentationstexten
+  (beslut 2026-10-02). Peka på kodval med namn i citattecken ("add_edge", "cap == 0")
+  i stället. Radnummer får användas i chatten när vi verifierar, men aldrig i texten.
 - **Källhänvisningar — använd kursens egen materialhierarki när den finns.**
   För TDDD95/ETE389:
   - Seminarier heter t.ex. **Seminar Ex5 (Graphs II)**, inte "Lecture 6".
@@ -214,17 +216,60 @@ Det där är kalibrerings-benchmarken. All process-text ska låta *ungefär* så
 3. **Regler** (spec-stil)
 4. **Delproblem (frågor jag ställer mig när jag läser problemet)** (process-stil)
 5. **Lösningsprocess — från problembeskrivning till kod** (process-stil, numrerad)
-6. **Edge cases** (bullet-lista, kort)
-7. **Korrekthet / tidskomplexitet** (bullet-lista, kort)
+6. **Tidskomplexitet** (en rad per algoritm-del, inget mer)
 
 Tidigare fanns "Inspiration" och "Tillvägagångssätt" som separata sektioner — dessa är
 nu sammansmälta i **Lösningsprocess**. Behåll den strukturen framåt.
+
+Separata "Edge cases"- och "Korrekthet"-sektioner är borttagna (beslut 2026-10-01).
+Edge cases berättas i den process-punkt där de dök upp (t.ex. testpunkten).
+Korrekthetsargumentet ska redan finnas i process-punkterna (teori-punkten, cut-punkten).
+
+## Mincut är referensfacit (färdigt 2026-10-01)
+
+Mincut-sektionen i `Presentation-Answers.md` är den första färdiga och ska användas som
+mall för alla följande problem. Läs den innan nästa problem påbörjas.
+
+**Punktordning i Lösningsprocess (mincut):**
+1–2. Läser problemet, formulerar delproblem.
+3. Snabb I/O (öppet: AI som referens).
+4–6. Delproblemen via kursmaterial, nya delfrågor dyker upp.
+7. Algoritmval: ett skäl, en källa ("I boken Competitive Programming så har man valt Dinic...").
+8. Teori: vad bakåtkanterna gör och varför, med egna ord + CP4-sida.
+9. Grafrepresentation: inspirationskälla (GfG) + vad jag gjorde annorlunda och varför.
+10. Implementation av algoritmen (BFS-nivåer, DFS, "it[u]") med CP4-sidor.
+    Slutar med cliffhanger mot nästa steg.
+11. Resultatet läses ut (cut-BFS) med slide-referens i egna ord.
+12. Testar Sample 1: slarvfel felsökta med AI, AI-genererade större testfall, edge cases
+    som dök upp (rekursionsdjup).
+
+**Lärdomar som gäller framåt:**
+- Varför före hur: teori-punkten kommer före representation och implementation.
+- Korta motiveringar. Ett skäl och en källa räcker. Stapla inte lab + slide + CP4 för samma val.
+- Visa förståelse: förklara vad koden gör med vardagliga ord, inte bara var den kommer ifrån.
+- Ange skillnader mot inspirationskällan (t.ex. kvarvarande kapacitet i stället för flow/C).
+  Examinationen jämför mot vanliga lösningar på nätet, så skillnaderna visar egen förståelse.
+- Inga dubbletter mellan punkter. Förklaras något i en ny punkt, stryk det ur den gamla.
+- Hitta aldrig på händelser (fel, insikter, experiment). Fråga Max vad som hände. Minns
+  Max inte, skriv det generellt och ärligt ("några små slarvfel").
+- AI-användning skrivs öppet där den skett (I/O-idiom, felsökning, testdata). LiU kräver
+  tydlighet kring generativ AI; IDA nämner "prohibited AI-based assistants".
+- Verifiera varje citat, sidnummer och slide-nummer mot vault-källorna innan det skrivs in
+  (`tddd95-slides/*.txt`, `CP4-Book2-Halim.txt`, `ete389-kursinfo/`).
+- Bakåtreferenser till mincut är OK och önskade i senare problem ("samma Dinic som i
+  mincut", "snabb I/O-mönstret från mincut"). Komponenter som etablerats i mincut:
+  snabb I/O, Dinic (add_edge, BFS, DFS, "it[]"), residualgraf med bakåtkanter
+  ("[to, cap, rev]"), cut-BFS från "s".
 
 ## Editerings-flöde
 
 Max föredrar att vi går punkt för punkt istället för stora omskrivningar i ett svep.
 För varje punkt: presentera nuvarande text, förslag på förbättring, be om beslut, tillämpa.
 Inte förvänta sig godkännande för hela block på en gång.
+
+Max har ofta `Presentation-Answers.md` öppen i VS Code. Be Max spara filen innan varje
+ändring och vänta på "sparat nu", annars krockar osparade ändringar med disken.
+Läs alltid om aktuell rad innan ändring; Max redigerar själv mellan stegen.
 
 ## Vad denna skill inte ska göra
 
@@ -236,4 +281,6 @@ Inte förvänta sig godkännande för hela block på en gång.
 
 Denna fil ska växa. När Max ger feedback om röst, sektionsstruktur, ordval eller
 källhänvisnings-format — uppdatera relevant avsnitt här. Historik: initialt utkast
-2026-09-06 (kalibrering baserad på mincut-genomgång).
+2026-09-06 (kalibrering baserad på mincut-genomgång). 2026-10-01: mincut färdig,
+referensfacit + lärdomar tillagda, Edge cases/Korrekthet ersatta av Tidskomplexitet.
+2026-10-02: inga radhänvisningar i presentationstexten.

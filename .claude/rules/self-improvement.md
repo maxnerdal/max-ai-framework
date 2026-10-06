@@ -20,7 +20,7 @@ Do not put content decisions here — those belong in the decision log.
 When the same pattern shows up in a second project, or is obviously not project-specific,
 propose promoting it:
 
-- Recurring craft, voice, or domain procedure → a skill in `.claude/skills/`
+- Recurring craft, voice, or domain procedure → a skill in `~/.claude/skills/<name>-<suffix>/` (global, lands in the framework via symlink), not the current repo's `.claude/skills/`
 - Reusable writing principle shared by several skills → a prompt in `prompts/`
 - Applies to every session regardless of project → a rule in `.claude/rules/`
 
