@@ -27,9 +27,23 @@ propose promoting it:
 Rules carry no area suffix (see `obsidian.md`). Skills, agents, commands, workflows, prompts
 and templates do — see the suffix table in `CLAUDE.md`.
 
+## Sideways — the auto-memory layer
+
+Auto-memory lives in `~/.claude/projects/<sanitized-cwd>/memory/`. It is per project *directory*,
+outside every git repo, and it travels nowhere. Use it only for observations that matter in that
+one directory.
+
+Anything that is a way of working belongs in `.claude/rules/` instead, where the symlink carries it
+to every project. A rule in the wrong layer is a rule Max cannot find later.
+
+When I do write to auto-memory, say so in the reply, naming the file and one line of what it says,
+so Max can decide whether it should have been a global rule, a vault anchor, or nothing at all.
+Never write a memory about a way of working silently.
+
 ## Guard
 
 - Propose, then write. Never create or edit a rule, skill, or anchor section unannounced.
+- Never let a working-method rule sit in auto-memory as its only home.
 - Prefer editing an existing file over adding a new one.
 - Do not capture trivia. If it would not change what a future session does, leave it out.
 - Style guides are living documents: sharpen the existing skill each time it is used rather

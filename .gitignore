@@ -22,3 +22,4 @@
 
 # Claude Code synced-skills cache (managed by the harness)
 .claude/skills/synced/
+.claude/skills/.trash/

@@ -8,6 +8,7 @@ Read from `~/Documents/max-ai-framework/config.md`:
 - `FPL_TEAM_ID` — public FPL entry ID (e.g. 8076724)
 - `FPL_PROJECT_DOC` — absolute path to the Obsidian project anchor to update
 - `FPL_API_TOKEN` — Bearer token for authenticated read of `/api/my-team/` (optional but recommended). Extract from browser: DevTools → Network → any `/api/entry/…` request → Request Headers → `X-Api-Authorization: Bearer <token>`. Paste only the token, skip the "Bearer " prefix.
+- `FPL_RIVAL_LEAGUE` — case-insensitive substring of the classic mini-league to track rival ownership in (e.g. `Helio`). Optional; skip the ownership step if empty or no match.
 
 If `FPL_API_TOKEN` is empty, still run — fall back to post-deadline picks and skip the live-lineup step.
 
@@ -38,6 +39,16 @@ If `FPL_API_TOKEN` is empty, still run — fall back to post-deadline picks and 
      ```
    - Verify HTTP 200 + JSON with `picks` key. If 401/403 or non-JSON: warn the user with the "Token refresh" instructions and fall back to post-deadline picks.
 
+5b. **Compute selling prices and real budget** (public data, no token needed). FPL's `value` / `last_deadline_value` is *market* value, not what the squad sells for — never use it as the transfer budget.
+   - Purchase price per squad player: from `/transfers/` (`element_in_cost` of the latest transfer bringing that player in) or, for players held since the draft, the `value` of round 1 in `https://fantasy.premierleague.com/api/element-summary/{id}/` → `history`.
+   - Selling price: `now_cost` if `now_cost <= purchase`, else `purchase + floor((now_cost - purchase) / 2)` (tenths of a million).
+   - Budget = sum of selling prices + bank. If `my-team` was fetched, prefer its `picks[].selling_price` and `transfers.bank` and use the computed values only as a cross-check.
+
+5c. **Rival ownership in `FPL_RIVAL_LEAGUE`**:
+   - Find the league id in `/entry/{FPL_TEAM_ID}/` → `leagues.classic` by name match.
+   - `https://fantasy.premierleague.com/api/leagues-classic/{league_id}/standings/` → standings (rank, total, gap to leader).
+   - For every rival except the user: `/entry/{rival}/event/{current_gw}/picks/` → count ownership and captaincy per element.
+
 6. **Build the analysis** in a single Python block reading from the JSON dumps:
    - Squad table: pick position, role (GK/DEF/MID/FWD), name, team short_name, cost (now_cost/10), GW points, total points, captain/vice
    - Fixture ticker for `next_gw` through `next_gw+4` (5 GWs), one row per player, sorted by team-avg FDR
@@ -46,9 +57,12 @@ If `FPL_API_TOKEN` is empty, still run — fall back to post-deadline picks and 
    - Captain recommendation: for each starter, look up FDR + fixture location for next_gw; recommend highest-ceiling non-injured premium on green fixture
    - VC recommendation: default to premium outfielder with next-best fixture; warn if user has VC on GK
    - **If live my-team was fetched**: compute diff between live picks and recommendation. Group into captain/VC changes, bench-order changes, starting-XI swaps.
+   - Add a **Säljpris** column and a **Ägs i liga** column (`k/n`, plus `C×k` for captaincy) to the squad table.
+   - Transfer candidates: show cost delta against the selling price of the outgoing player, and the remaining bank against the real budget from 5b. Show rival ownership for each candidate.
+   - Rival-aware tilt: when two options have roughly equal expected value and the user trails the league leader, prefer the one fewer rivals own (player or captain). Never sell a player owned by most rivals just to differentiate — that doubles the downside.
 
 7. **Update the project doc** at `FPL_PROJECT_DOC`. Preserve manual sections; rewrite the auto-managed ones (marked with the sentinels below). Sections managed by this command:
-   - **Aktuell status** — full replace with latest snapshot (points, rank, bank, value, chips)
+   - **Aktuell status** — full replace with latest snapshot (points, rank, bank, market value, **budget = selling value + bank**, chips, mini-league position and gap to leader)
    - **Laguppställning (efter GW{current_gw}, före GW{next_gw})** — full replace with post-deadline picks. If live my-team fetched, add a note showing current live state where it differs.
    - **Transfer-historik** — append rows for new transfers since last sync (dedup by GW + element_in + element_out)
    - **Fixture ticker GW{next_gw}–GW{next_gw+4}** — full replace with fresh table
@@ -65,7 +79,7 @@ If `FPL_API_TOKEN` is empty, still run — fall back to post-deadline picks and 
 
 8. **Present the chat summary** — three bullet blocks:
    - **Diff mot förra synken:** what changed in the doc (transfers logged, chip status, rank movement)
-   - **GW{next_gw}-plan i korthet:** starting XI in one line, C/VC, key bench-order note
+   - **GW{next_gw}-plan i korthet:** starting XI in one line, C/VC, key bench-order note, real budget, and which recommended picks are differentials in the rival league
    - **Handling som krävs:** exact list of clicks the user should do in the FPL app (captain change, VC change, bench-order, starting-XI swaps, chip activation, transfers). Base this on the live-vs-recommendation diff when available.
 
 ## Token refresh (when live-read fails with 401/403)
