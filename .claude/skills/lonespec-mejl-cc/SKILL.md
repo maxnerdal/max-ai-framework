@@ -13,19 +13,31 @@ Max laddar ner lönespecifikationerna ur Recman som en zip. Skillen packar upp d
 
 ## Input
 
-En zip med en PDF per konsult, exporterad ur Recman för en löneperiod (16:e föregående månad – 15:e innevarande, enligt *Lönehantering* i [[Operations]]). Lägg den i `data/` i projektet eller valfri mapp utanför git — aldrig i ett repo.
+En zip med en PDF per konsult, exporterad ur Recman för en löneperiod (16:e föregående månad – 15:e
+innevarande, enligt *Lönehantering* i [[Operations]]). Zipen ligger där Max laddade ner den, normalt
+`~/Downloads/payroll (N).zip` — aldrig i ett repo.
+
+**Packa upp i `~/.workspace-mcp/attachments/`.** Gmail-servern läser bilagor bara därifrån; en PDF i
+scratchpad eller `~/Downloads` avvisas med "local file access is limited to the server's permitted
+directories" och utkastet blir aldrig till. Filerna raderas därifrån när utkasten är skapade.
 
 ## Arbetsgång
 
-1. **Packa upp.** `python3 packa_upp.py <zipen> <målmapp>` (ligger i samma mapp som den här filen). Skriptet packar upp i en egen tom mapp, kör `pdftotext` på varje PDF och skriver ut filnamn + de första raderna text per fil. Läs utskriften — matcha inte på filnamn ensamt, Recmans export namnger inte alltid filerna efter personen.
+1. **Packa upp.** `python3 packa_upp.py <zipen> ~/.workspace-mcp/attachments/<period>` (skriptet ligger i
+   samma mapp som den här filen). Det packar upp i en egen tom mapp, kör `pdftotext` på varje PDF och
+   skriver ut namn, mejladress och period per fil. Läs utskriften — matcha inte på filnamn ensamt.
 2. **Matcha PDF → konsult.** Namnet står i PDF-texten. En PDF hör till exakt en person.
-3. **Hämta mejladress.** Recman är masterregister: kandidatkortets mejl gäller. Finns ingen tillgång till Recman i sessionen, sök i skickade mejl (`search_gmail_messages`, `in:sent` + namnet, `include_headers: true`). Hittas ingen adress → fråga, gissa aldrig.
+3. **Hämta mejladress ur PDF:en.** Specifikationen skriver konsultens adress på raden `E-post`, och det är
+   den som gäller — ingen Recman-slagning behövs. Saknar en PDF adress: slå upp kandidatkortet i Recman,
+   annars sök i skickade mejl (`search_gmail_messages`, `in:sent` + namnet, `include_headers: true`).
+   Hittas ingen adress → fråga, gissa aldrig.
 4. **Kör kontrollerna nedan.**
 5. **Visa tabellen** (konsult × filnamn × mottagaradress) och vänta på Max bekräftelse.
 6. **Skapa utkasten**, ett per konsult, med `mcp__workspace-mcp__draft_gmail_message`:
    - `user_google_email: "max.nerdal@curaconnect.se"`
    - `from_email: "max.nerdal@curaconnect.se"` — kontots standard-Send-As är `info@curaconnect.se`, som annars blir avsändare
-   - `attachments: [{"path": "<absolut sökväg till PDF:en>"}]`
+   - `attachments: [{"path": "/Users/maxnerdal/.workspace-mcp/attachments/<period>/<filen>"}]` — absolut
+     sökväg, och under den mappen (se [Input](#input))
    - `include_signature: true`, ingen egen signatur i brödtexten
 
 ## Mall
@@ -81,11 +93,9 @@ def period(end_year: int, end_month: int) -> tuple[str, str]:
 
 - **Årtal.** Perioden spänner över nyår i januarikörningen: `16 december 2026–15 januari 2027`. Står båda
   datumen samma år skrivs årtalet bara en gång.
-- **Den 25:e är inte alltid en bankdag.** Faller den på helg eller svensk helgdag betalas lönen normalt ut
-  närmast föregående bankdag — men det är Curas och Fortnox praxis som avgör, inte den här filen. Räkna
-  fram den 25:e, kontrollera veckodag och helgdag, och **fråga Max om det riktiga datumet** innan utkasten
-  skapas. Skriv aldrig ett datum i mejlet som inte är en bankdag.
-  Nära i tiden: 25 oktober 2026 är en söndag, och 25 december 2026 är juldagen.
+- **Den 25:e står kvar även när den inte är en bankdag.** Beslutat av Max 2026-10-21, när perioden
+  16/9–15/10 betalades ut en söndag: mejlet skriver den 25:e oavsett veckodag och helgdag. Fråga inte om
+  ett annat datum och flytta inte fram till närmaste bankdag.
 
 ## Kontroller före utkast
 
@@ -95,11 +105,25 @@ Det här är skillens egentliga arbete. En felparad bilaga läcker en kollegas l
 2. **En per person.** Två PDF:er som matchar samma namn, eller en PDF där två namn förekommer, stoppar körningen. Fråga.
 3. **Namn mot adress.** Läs namnet i PDF:en mot namnet som äger mejladressen. Snarlika namn i registret (samma förnamn, dubbelnamn) → fråga.
 4. **Period.** Alla PDF:er ska gälla samma löneperiod, och den perioden ska vara den som står i mejlet. En avvikare är troligen en gammal fil som följt med i zipen.
-5. **Efter utkasten:** öppna ett par utkast och kontrollera att bilagan är rätt persons fil.
+5. **Efter utkasten: kontrollera varje par, inte ett stickprov.** Sök utkasten på mottagare *och* filnamn
+   i samma fråga, en fråga per konsult:
+
+   ```
+   search_gmail_messages: in:drafts to:<adressen> filename:<filnamnet>
+   ```
+
+   Varje fråga ska ge exakt ett träffat utkast, och meddelande-id:na ska vara olika, ett per konsult. Noll
+   träffar betyder att bilagan hamnade hos någon annan. Stickprov räcker inte: det är billigt att fråga för
+   alla (en sökning per person), och en förväxling drabbar helst just de konsulter ett stickprov hoppar över
+   — två konsulter med samma förnamn i samma körning. Läs också av `To`-raden på alla
+   utkast i ett svep med `get_gmail_messages_content_batch` (`format: "metadata"`), som samtidigt visar att
+   avsändaren blev `max.nerdal@curaconnect.se` och inte `info@`.
 
 ## Personuppgifter
 
-Lönebelopp och personnummer stannar i PDF:erna. Skriv aldrig ut belopp per person i chatten, i repot eller i valvet — tabellen i avslutet innehåller namn, filnamn och mejladress, inget mer. Zipen och de uppackade filerna ligger utanför git och städas när utkasten är skapade.
+Lönebelopp och personnummer stannar i PDF:erna. Skriv aldrig ut belopp per person i chatten, i repot eller i valvet — tabellen i avslutet innehåller namn, filnamn och mejladress, inget mer. Zipen och de uppackade filerna ligger utanför git. Töm
+`~/.workspace-mcp/attachments/` när utkasten är skapade och verifierade — Gmail har bilagan i utkastet, så
+den lokala kopian behövs inte längre.
 
 ## Fråga användaren när
 
@@ -111,3 +135,6 @@ Lönebelopp och personnummer stannar i PDF:erna. Skriv aldrig ut belopp per pers
 ## Avslut
 
 Kort tabell: konsult × filnamn × mottagaradress × utkast skapat. Nämn vad som inte gick att matcha och vad Max behöver kontrollera innan utskick.
+
+## Processen i valvet
+[[Operations#Lönehantering]] — sista steget, lönespecarna ut till konsulterna. Inventariet: [[Automationer]].

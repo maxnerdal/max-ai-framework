@@ -6,19 +6,26 @@ The target directory must not exist, or must be empty: a payslip run that silent
 month's files would pair the wrong PDF with a consultant. Entry names are flattened to a basename,
 so a crafted path inside the archive cannot write outside the target.
 
-Prints the absolute path of every PDF, which is what the Gmail draft attaches, and the opening lines
-of its text, which is where the consultant's name stands. Matching is left to the reader: Recman does
-not name the files after the person consistently enough to trust a filename.
+Prints the absolute path of every PDF, which is what the Gmail draft attaches, and the three things that
+decide who it goes to: the name, the e-mail address and the period. Matching is left to the reader:
+Recman does not name the files after the person consistently enough to trust a filename.
+
+The specification also carries the consultant's home address, telephone number and pay, none of which the
+mail needs, so they are deliberately not printed. A PDF the patterns do not fit falls back to its opening
+lines, since a layout nobody has seen is worth looking at.
 """
 
+import re
 import sys
 import zipfile
 from pathlib import Path
 from subprocess import run
 
-LINES = 12
-"""Lines of text printed per PDF. Enough to carry the name and the period, little enough that no
-amount needs to be read out."""
+FALLBACK_LINES = 6
+"""Lines printed for a PDF whose name, address or period could not be found."""
+
+MAIL = re.compile(r"E-post\s+(\S+@\S+)")
+PERIOD = re.compile(r"Period:\s*(.+)")
 
 
 def unpack(archive: Path, target: Path) -> list[Path]:
@@ -40,11 +47,26 @@ def unpack(archive: Path, target: Path) -> list[Path]:
 
 
 def text_of(pdf: Path) -> str:
+    """Who the PDF belongs to, and for which period. Nothing else is printed."""
     done = run(["pdftotext", "-layout", str(pdf), "-"], capture_output=True, text=True)
     if done.returncode != 0:
-        return f"(pdftotext misslyckades: {done.stderr.strip()[:200]})"
+        return f"    (pdftotext misslyckades: {done.stderr.strip()[:200]})"
     lines = [line.strip() for line in done.stdout.splitlines() if line.strip()]
-    return "\n".join(f"    {line}" for line in lines[:LINES]) or "    (ingen text — skannad PDF?)"
+    if not lines:
+        return "    (ingen text — skannad PDF?)"
+
+    name = lines[0]
+    mail = MAIL.search(done.stdout)
+    period = PERIOD.search(done.stdout)
+    if not mail or not period:
+        missing = "mejladress" if not mail else "period"
+        head = "\n".join(f"    {line}" for line in lines[:FALLBACK_LINES])
+        return f"    ({missing} hittades inte — första raderna i stället, titta på filen)\n{head}"
+    return (
+        f"    namn:   {name}\n"
+        f"    mejl:   {mail.group(1)}\n"
+        f"    period: {period.group(1).strip()}"
+    )
 
 
 def main() -> None:
