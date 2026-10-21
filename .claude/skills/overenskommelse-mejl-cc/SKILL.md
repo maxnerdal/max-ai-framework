@@ -82,11 +82,13 @@ Koppla varje klockslag till det datum som ligger närmast ovanför (närmaste da
 Rader med datum, starttid, sluttid, konsultnamn. Gruppera per konsult; se upp med förkortade/dubbla namn.
 
 ## Mejladresser
-Sök i skickade mejl: `in:sent subject:Överenskommelse` eller konsultens namn (`search_gmail_messages` med `include_headers`). Hittas ingen adress → fråga. Kända:
-- Johan Sjödin — sjodda1997@gmail.com
-- Oratile Johansson — oratilelexi@gmail.com
-- Said Muhena — said_muhena@hotmail.com
-- Basireh Heidari — basireh.heidari22@gmail.com
+
+Recman är masterregister: kandidatkortets mejl gäller. Finns ingen tillgång till Recman i sessionen,
+sök i skickade mejl: `in:sent subject:Överenskommelse` eller konsultens namn (`search_gmail_messages`
+med `include_headers`). Hittas ingen adress → fråga, gissa aldrig.
+
+Skriv inga adresser i den här filen. Repot är publikt, och en namngiven konsults privata adress här
+är publicerade personuppgifter. Slå upp dem per körning i stället.
 
 ## Verifiering (före utkast)
 1. Antal pass per konsult och fördelning dag/kväll/natt ska matcha summeringen (Excel sheet2 eller PDF-header).
