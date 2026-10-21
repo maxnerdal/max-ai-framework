@@ -63,8 +63,8 @@ Bara för konsulter som saknas i Medarbetare-listan. Kör gärna detta i förvä
 ## Efter inskick
 1. Fakturan laddas ner som `avanza_invoice_<nr>.pdf` i `~/Downloads`. Läs båda sidorna: sida 2 är specifikationen per kostnadsställe, en rad per konsult.
 2. Stäm av varje rad och totalen mot checklistan i noten.
-3. Skicka fakturan vidare till bokföringens leverantörsadress — den står under *Home* i `[[Tjänstepension]]`. Skriv den inte här: repot är publikt, och adressen tar emot leverantörsfakturor från vem som helst.
-4. Skriv in fakturanummer, OCR, belopp och förfallodatum i kvartalets avsnitt i `[[Tjänstepension]]`, och bocka av raderna.
+3. Skriv in fakturanummer, OCR, belopp och förfallodatum i kvartalets avsnitt i `[[Tjänstepension]]`, och bocka av raderna.
+4. **Vidarebefordra Avanzas fakturamejl — "Här kommer din faktura", med PDF:en — till bokföringen.** Det är sista steget: utan det blir premien aldrig betald, hur rätt allt annat än är. Adressen står under *Home* i `[[Tjänstepension]]`; skriv den inte här, repot är publikt och adressen tar emot leverantörsfakturor från vem som helst. Notera i noten att den är skickad.
 
 ## Kända egenheter
 - Månadspremien står kvar på 0 kr för alla — premien är en engångsinbetalning, inte en löpande premie. Sätt aldrig en månadspremie.
