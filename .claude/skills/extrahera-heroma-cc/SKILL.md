@@ -1,9 +1,16 @@
 ---
 name: extrahera-heroma-cc
-description: Extrahera alla arbetspass per konsult och vecka ur en Heroma-rapport (PDF, "Personlig arbetstid") och lista dem i standardformat, inför jämförelse med Recman.
+description: Schemaavstämning mot kundens schema — extraherar alla arbetspass per konsult och vecka ur avdelningens Heroma-rapport (PDF, "Personlig arbetstid") och listar dem i standardformat, så att kundens schema kan jämföras pass för pass mot Curas eget i Recman. Triggers on: schemaavstämning, stämmer schemat, jämför Heroma mot Recman, Heroma-rapport, personlig arbetstid, läs av kundens schema, avstämning av pass.
 ---
 
 # Extrahera pass ur Heroma-rapport
+
+Det här är första halvan av en **schemaavstämning**: kontrollen av att kundens schema och Curas eget
+säger samma sak. Skillen läser kundens sida — avdelningens Heroma-rapport. Max hämtar motsvarande
+pass ur Recman, och sedan jämförs listorna pass för pass (se *Jämförelse med Recman* nedan).
+Avvikelser ska rättas i Recman innan de slår igenom i tidrapportering och fakturering.
+
+Processen i valvet: [[Operations#Schemaavstämning mot kundens schema]].
 
 Heroma-rapporten "Personlig arbetstid" (t.ex. Region Uppsala) är en PDF med en sida (ibland två) per person. Varje person har ett veckorutnät "Tider" (V. xx, Mån–Sön med datum ÅÅMMDD), där varje pass står som en tid ("06:45-15:00") med en etikett under ("Ssk 46400"). Under rutnätet finns "Summering av arbetstid" med timmar och antal arbetstillfällen (Arb.tillf.) per vecka.
 

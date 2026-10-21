@@ -68,3 +68,6 @@ Kör `bemlo-kandidatkoll-cc` på det nya kortet om en enhet är känd. Rapporter
 
 ## Mot automatisering
 Bemlos webbapp talar GraphQL mot `api.bemlo.ai/graphql` (skapa kandidat, spara kort, ladda upp dokument). Det är odokumenterat och kan bryta mot användarvillkoren — använd inte utan att Max fattat beslut. Bemlos officiella API är borträknat på kostnad, se beslutsloggen i `curaconnect-ai-framework.md`.
+
+## Processen i valvet
+[[Operations#Handlingar (presentationsredo)]] — processen som gör en kandidat presentationsredo. Inventariet: [[Automationer]].

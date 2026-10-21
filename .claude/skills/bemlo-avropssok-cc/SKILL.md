@@ -165,3 +165,6 @@ det med `modify_gmail_message_labels`. Säg till Max att du gjort det.
 Uppdatera konsultens **Senast körd** i [[Avropsbevakning-konsulter]]. Hittade du ett nytt
 diskvalificerande mönster — ett krav som återkommer och som konsulten aldrig klarar — skriv in det
 under konsultens **Diskvalificerar** efter OK från Max, så slipper nästa körning öppna de avropen.
+
+## Processen i valvet
+[[Operations#Uppdragsmatchning befintliga konsulter]] — den manuella matchningen som skillen bär sökdelen av. Inventariet: [[Automationer]].

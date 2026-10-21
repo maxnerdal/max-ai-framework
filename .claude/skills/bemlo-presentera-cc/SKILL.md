@@ -73,3 +73,6 @@ När en bokad konsult inte kan ta pass presenteras en ersättare på bokningen, 
 
 ## Avslut
 Kort lista per konsult: antal pass, bifogade dokument, kravsvar, öppna flaggor (otydlig bekräftelse, gamla referenser, vilovarningar, >40 h/vecka).
+
+## Processen i valvet
+[[Operations#Presentation]] — det avslutande steget “Presentera”. Inventariet: [[Automationer]].

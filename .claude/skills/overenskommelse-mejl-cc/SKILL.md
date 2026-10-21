@@ -97,3 +97,6 @@ Skriv inga adresser i den här filen. Repot är publikt, och en namngiven konsul
 
 ## Avslut
 Kort tabell: konsult × dag/kväll/natt/totalt + mottagaradress. Nämn regelbrott som schemat flaggar (Excel-kolumnen Regelbrott eller PDF-sektionen) (dygnsvila, >40 h/vecka) — de följer inte med i mejlet men Max bör känna till dem innan utskick.
+
+## Processen i valvet
+[[Operations#Presentation]] — steget “Mejla kandidaten en överenskommelse med schema”. Inventariet: [[Automationer]].

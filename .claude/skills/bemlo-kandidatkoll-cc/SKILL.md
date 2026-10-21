@@ -54,3 +54,6 @@ Giltighet räknas mot **förväntad sista svarsdag**, inte dagens datum.
 
 ## Avslut
 Tabell per konsult: punkt × OK / åtgärdat / saknas, plus en kort åtgärdslista för Max med deadline (= förväntad publicering). Lägg saknade punkter som uppgifter i Cura Connect — Backlog om Max vill.
+
+## Processen i valvet
+[[Operations#Handlingar (presentationsredo)]], och kontrollen inför [[Operations#Presentation]]. Inventariet: [[Automationer]].
