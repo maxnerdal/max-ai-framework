@@ -120,41 +120,22 @@ Tabell i chatten, sorterad på sista svarsdag:
 Inget pris — det är Curas affär, inte konsultens. Lägg de uteslutna avropen i en egen kort tabell
 med skälet, så att Max ser att de är bedömda och inte missade.
 
+En avropslista är numrerad, ett avrop per nummer, varje punkt med period och omfattning, sedan
+arbetets innehåll, sedan kraven, sedan svarsdagen. Avsluta med vad konsulten ska svara med: vilka
+nummer, vilka veckor, vilka journalsystem, och sina två senaste uppdragsgivare för referenstagning.
+
+Tonen står i **Så skriver vi till konsulter** i [[Konsultvägledning]] och gäller listan lika mycket
+som ett svarsmejl: sakligt och kort, bara hälsningsfraser, krav skilt från verksamhetsbeskrivning,
+inget pris. Läs den innan du skriver mejlet.
+
 Mejlutkast skapas på begäran med `mcp__workspace-mcp__draft_gmail_message`, aldrig med de hostade
 Gmail-connectorerna. **Fråga alltid vilken avsändaradress som ska användas** — max.nerdal@ eller
 info@curaconnect.se.
 
-Skriv sakligt och kort, i punktform där det passar. Inga inledningar, inga sammanfattningar, ingen
-artighet utöver hälsningsfraserna. En avropslista är numrerad, ett avrop per nummer, varje punkt
-med period och omfattning, sedan arbetets innehåll, sedan kraven, sedan svarsdagen. Avsluta med vad
-konsulten ska svara med: vilka nummer, vilka veckor, vilka journalsystem, och sina två senaste
-uppdragsgivare för referenstagning.
-
-**Svar på ett mejl följer konsultens egen ordning.** Gå igenom hans punkter i den ordning han tar
-upp dem, en rubrik per fråga, svaret i punktform under. Skriv inte om ordningen efter vad du
-tycker är viktigast — han läser svaret bredvid sin egen fråga.
-
-**Tackar konsulten nej med hänvisning till "kraven", är svaret en kartläggning, inte en ursäkt.**
-Lista de skallkrav som återkom i uppdragen, avdubblade och ordagrant citerade, och be honom markera
-dem han inte uppfyller eller inte är bekväm med. Svaret går in under **Diskvalificerar** i
-registret och gör nästa lista kortare och träffsäkrare.
-
-Listan ska bara innehålla krav vars svar vi faktiskt inte känner till, och som handlar om vad
-konsulten kan och vill göra: kompetens, erfarenhet av en viss verksamhet, journalsystem, körkort,
-patientbegränsningar. Tre saker hålls utanför:
-
-- **Formalia och pappersarbete** — SITHS-kort och tillitsnivå, HLR-intyg, karens, belastnings-
-  registret, HOSP, IVO. Inget konsulten råder över; det hör hemma i kandidatkollen.
-- **Det vi redan vet.** Står svaret på kandidatkortet eller i registret, fråga inte. Att fråga en
-  läkare med många år i yrket om han har två års klinisk erfarenhet efter legitimation säger bara
-  att vi inte läst hans kort.
-- **Schemavillkor**, som att konsulten ska ta hela veckor. Det är ett villkor i det enskilda
-  avropet, inte en egenskap hos konsulten, och täcks av frågan om vilka veckor som är aktuella.
-
-Håll isär krav och beskrivning i svaret. Det som står under SKALLKRAV är ett krav. Det som står i
-verksamhetsbeskrivningen eller informationen till leverantör beskriver arbetet, och enheten kan
-inte kräva mer än avtalets grundnivå med stöd av det. Säg det rakt ut till konsulten, annars läser
-han en bred verksamhetsbeskrivning som en kravlista och tackar nej i onödan.
+**Svarar konsulten på listan, sluta här.** Konversationen som följer — hans frågor om krav och
+villkor, hans tillgänglighet, hans besked om vad han inte uppfyller — bärs av `konsultdialog-cc`,
+som har formuleringarna och som skriver tillbaka till registret. Skriv inga svar på konsultmejl i
+den här skillen.
 
 `draft_gmail_message` kan bara skapa, inte ändra. Ska ett utkast göras om: skapa det nya först,
 leta reda på det gamla med `search_gmail_messages` på `in:draft subject:"..."` och lägg TRASH på
@@ -162,7 +143,8 @@ det med `modify_gmail_message_labels`. Säg till Max att du gjort det.
 
 ## Avslut
 
-Uppdatera konsultens **Senast körd** i [[Avropsbevakning-konsulter]]. Hittade du ett nytt
+Uppdatera konsultens **Senast körd** i [[Avropsbevakning-konsulter]]. Rör inte **Senast hörd av** —
+den tillhör `konsultdialog-cc`. Hittade du ett nytt
 diskvalificerande mönster — ett krav som återkommer och som konsulten aldrig klarar — skriv in det
 under konsultens **Diskvalificerar** efter OK från Max, så slipper nästa körning öppna de avropen.
 
