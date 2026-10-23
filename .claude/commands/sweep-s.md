@@ -4,7 +4,7 @@ End-of-day closer for the daily workflow. Syncs check-marks between today's morn
 
 The morning briefing captures the **plan**. By itself it never becomes a record of what actually happened — checked items pile up in the briefing, but the daily note still reads the same as it did at 9am, and the Tasks list still shows them open. `/sweep-s` closes the loop:
 
-1. **Bidirectional task sync** — `/morning-s` writes briefing rows like `- [ ] YYYY-MM-DD — title <!-- gt:TASK_ID -->`. During the day:
+1. **Bidirectional task sync** — `/morning-s` writes briefing rows like `- [ ] YYYY-MM-DD — [Tag] title <!-- gt:TASK_ID -->`. During the day:
    - Items checked off in the briefing get marked `completed` in Google Tasks via the embedded ID.
    - Items completed directly in the Google Tasks UI (mobile, desktop, calendar sidebar) get flipped from `[ ]` to `[x]` in the briefing.
    The briefing and Tasks list end the day consistent. Daily note IS the history (rule from `~/.claude/rules/obsidian.md`), so checked items stay in the briefing untouched after sync.
@@ -15,11 +15,11 @@ The morning briefing captures the **plan**. By itself it never becomes a record 
 
 Same routing as `/morning-s` — kept in sync. Update when accounts or list IDs change.
 
-| Area | Google account | Tasks list(s) for backlog |
-|---|---|---|
-| Personal | maxnerdal@gmail.com | Personal — Backlog (`QVRXVU1FdUNySGdiVm5nNA`) |
-| Cura Connect | max.nerdal@curaconnect.se | Cura Connect — Backlog (`eGItTmM3S0NiTC0tcm15Qg`), Cura Connect — Recurring (`X0d1X0RLQTE4Yk9FN1RZag`) |
-| Max Nerdal AB | *(not configured)* | *(none)* |
+| Area | Tag | Google account | Tasks list(s) for backlog |
+|---|---|---|---|
+| Personal | `[P]` | maxnerdal@gmail.com | Personal — Backlog (`QVRXVU1FdUNySGdiVm5nNA`) |
+| Cura Connect | `[CC]` | max.nerdal@curaconnect.se | Cura Connect — Backlog (`eGItTmM3S0NiTC0tcm15Qg`), Cura Connect — Recurring (`X0d1X0RLQTE4Yk9FN1RZag`) |
+| Max Nerdal AB | `[MN]` | *(not configured)* | *(none)* |
 
 ## Steps
 
@@ -27,11 +27,11 @@ Same routing as `/morning-s` — kept in sync. Update when accounts or list IDs 
 
 2. **Read today's daily note** at `~/Documents/obsidian-vault/Daily logs/{YYYY-MM-DD}.md`. If it doesn't exist, exit with "no daily note for today, nothing to sweep."
 
-3. **Locate the `## Morning briefing` section.** Within it, iterate the area subsections (`#### Cura Connect`, `#### Personal`, `#### Max Nerdal AB` — match by header text exactly, since these map 1:1 to vault folder names and to the Account map above).
+3. **Locate the `## Morning briefing` section** and its `#### Todos` block (one merged list for all areas). Notes written before 2026-10-23 instead have per-area `###### Todos` blocks under `#### Cura Connect` / `#### Personal` / `#### Max Nerdal AB`; parse those the same way, taking the area from the header.
 
-4. **For each area, find its `###### Todos` block and parse every line.** A line is in scope if it matches the pattern `- [ ] <content> <!-- gt:<TASK_ID> -->` or `- [x] <content> <!-- gt:<TASK_ID> -->`. Capture: `state` (`[ ]` or `[x]`), `content` (without the trailing comment), `task_id`. Lines without a `<!-- gt:... -->` comment are legacy or hand-added — leave them untouched and log a warning naming the line.
+4. **Parse every line in the Todos block.** A line is in scope if it matches the pattern `- [ ] <content> <!-- gt:<TASK_ID> -->` or `- [x] <content> <!-- gt:<TASK_ID> -->`. Capture: `state` (`[ ]` or `[x]`), `content` (without the trailing comment), `task_id`, and `area` from the `[P]` / `[CC]` / `[MN]` tag via the Account map. Lines without a `<!-- gt:... -->` comment are hand-added — leave them untouched and log a warning naming the line.
 
-5. **For each area, fetch tasks completed today from Google Tasks.** Call `mcp__workspace-mcp__list_tasks` per list in the Account map with `show_completed=True`, `show_hidden=True`, `completed_min={today_start}`, `completed_max={now}`. Merge results across the area's lists. Collect the set of completed `task_id`s — call this `completed_in_tasks`.
+5. **For each area with parsed lines, fetch tasks completed today from Google Tasks.** Call `mcp__workspace-mcp__list_tasks` per list in the Account map with `show_completed=True`, `show_hidden=True`, `completed_min={today_start}`, `completed_max={now}`. Merge results across the area's lists. Collect the set of completed `task_id`s — call this `completed_in_tasks`.
 
 6. **Reconcile each parsed briefing line** (per area):
 
@@ -46,7 +46,7 @@ Same routing as `/morning-s` — kept in sync. Update when accounts or list IDs 
 
 7. **Collect today's git activity.** Glob `~/Documents/*/.git` (depth 1) to discover repos. For each repo, run `git -C <repo> log --since="00:00" --until="now" --all --pretty=format:'%h %s'` to capture every commit authored today on any branch. No author filter (single-user machine). Skip repos with zero commits silently. Capture the current default branch name per repo via `git -C <repo> symbolic-ref --short HEAD` for the display label (best-effort; fall back to "various" if detached or unclear).
 
-8. **Collect deferred todos.** Re-walk the briefing's area `###### Todos` blocks (state is now post-reconciliation) and capture every line still matching `- [ ] <content>`. Tag each with its area name. Do **not** rewrite these briefing lines — they stay `[ ]` as the day's open-at-EOD record.
+8. **Collect deferred todos.** Re-walk the briefing's Todos block (state is now post-reconciliation) and capture every line still matching `- [ ] <content>`. Keep each line's area tag. Do **not** rewrite these briefing lines — they stay `[ ]` as the day's open-at-EOD record.
 
 9. **Write the `## What got done` section.** Append (or replace, if it already exists) a `## What got done` section at the end of `Daily logs/{YYYY-MM-DD}.md`. Idempotent: rerunning `/sweep-s` must replace the existing section, not duplicate it.
 
@@ -62,7 +62,7 @@ Same routing as `/morning-s` — kept in sync. Update when accounts or list IDs 
    - …
 
    #### Deferred from morning
-   - [<Area>] <content>
+   - <content>
    - …
    ```
 
@@ -101,7 +101,7 @@ Same routing as `/morning-s` — kept in sync. Update when accounts or list IDs 
 - Does not act on briefing lines without a `<!-- gt:TASK_ID -->` comment — they're legacy/hand-added and out of scope. A warning is logged.
 - Does not modify calendar events. If a planned event didn't happen, the user marks it manually.
 - Does not auto-modify project checklists *without confirmation*. The routing step can append `- [ ]` items to a Project's plan, but only after the user picks "Project todo" and chooses the target project — never silently.
-- Does not act on `- [x]` items found anywhere outside an area's `###### Todos` subsection — ad-hoc todos the user added elsewhere are off-limits.
+- Does not act on `- [x]` items found anywhere outside the briefing's Todos block — ad-hoc todos the user added elsewhere are off-limits.
 - Does not handle undated Google Tasks. Sweep operates only on tasks present in today's briefing (which `/morning-s` filtered to `due ≤ today`).
 - Does not query GitHub. Pure local `git log` — pushed-but-uncommitted work isn't a thing, and local commits not yet pushed still count as "shipped" today.
 - Does not delete or rewrite captures in the daily note's `## <Area>` sections. Routing copies the capture to a persistent home; the daily note retains the original as history.

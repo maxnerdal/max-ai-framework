@@ -96,7 +96,7 @@ The pivot: HOSP automation stays in Cura because Cura is the beneficiary, even t
 - Bare `due` dates are *soft targets* — surfaced in the briefing when ≤ today, never auto-pulled before.
 - `DEADLINE`-titled tasks are *hard* — surfaced with 🚨 when within 7 days; auto-pulled into today's daily note on the deadline day.
 
-**Sync model:** `/morning-s` writes briefing rows as `- [ ] YYYY-MM-DD — title <!-- gt:TASK_ID -->`. `/sweep-s` reconciles bidirectionally at EOD: briefing `[x]` → Tasks completed via embedded ID, and Tasks completed-today → flip briefing `[ ]` to `[x]`. See [[max-ai-framework-tasks-backed-backlog]] for the full migration log.
+**Sync model:** `/morning-s` writes briefing rows as `- [ ] YYYY-MM-DD — [Tag] title <!-- gt:TASK_ID -->`. `/sweep-s` reconciles bidirectionally at EOD: briefing `[x]` → Tasks completed via embedded ID, and Tasks completed-today → flip briefing `[ ]` to `[x]`. See [[max-ai-framework-tasks-backed-backlog]] for the full migration log.
 
 ## Access
 Use Read, Grep, and Glob over the vault path. The Obsidian CLI and QMD MCP are not installed; file reads cover the basics.

@@ -1,31 +1,38 @@
-Generate today's morning briefing in the user's Obsidian daily note.
+Generate today's morning briefing in the user's Obsidian daily note: a short overview plus a scratch board for agreeing on what is relevant today.
 
 ## Account map
 
-Per-area Google routing. Update when accounts or list IDs change.
+Per-area Google routing. Update when accounts or list IDs change. The tag is used on every briefing line that belongs to an area.
 
-| Area | Google account | Tasks list(s) for backlog |
-|---|---|---|
-| Personal | maxnerdal@gmail.com | Personal — Backlog (`QVRXVU1FdUNySGdiVm5nNA`) |
-| Cura Connect | max.nerdal@curaconnect.se | Cura Connect — Backlog (`eGItTmM3S0NiTC0tcm15Qg`), Cura Connect — Recurring (`X0d1X0RLQTE4Yk9FN1RZag`) |
-| Max Nerdal AB | *(not configured)* | *(none)* |
+| Area | Tag | Google account | Tasks list(s) for backlog |
+|---|---|---|---|
+| Personal | `[P]` | maxnerdal@gmail.com | Personal — Backlog (`QVRXVU1FdUNySGdiVm5nNA`) |
+| Cura Connect | `[CC]` | max.nerdal@curaconnect.se | Cura Connect — Backlog (`eGItTmM3S0NiTC0tcm15Qg`), Cura Connect — Recurring (`X0d1X0RLQTE4Yk9FN1RZag`) |
+| Max Nerdal AB | `[MN]` | *(not configured)* | *(none)* |
 
-Reading calendar + Gmail for an area requires its Google account to be connected via the `workspace-mcp` server. If an account isn't reachable, note it in the briefing rather than failing.
+Reading calendar + Gmail for an area requires its Google account to be connected via the `workspace-mcp` server. If an account needs re-auth, call `mcp__workspace-mcp__start_google_auth` so the consent page opens, tell the user, and note the gap in the briefing rather than failing.
+
+## Routine events
+
+Daily blocks that are left out of the briefing entirely: `Vakna`, `Gym`, `Lunch`, `Middag`, `Läggdax`. Match by exact event title. Extend this list when the user names more.
 
 ## Steps
 
 1. **Compute today's date** in `YYYY-MM-DD` format.
 
 2. **Check today's daily note** at `~/Documents/obsidian-vault/Daily logs/{YYYY-MM-DD}.md`.
-   - If it exists, read it. Do not overwrite content outside `## Morning briefing`.
-   - If it doesn't exist, ask the user to open Obsidian and click "Today's note" so Templater fires the template. As a fallback, write the template inline (sections: Morning briefing / Cura Connect / Personal / Max Nerdal AB / Ideas).
+   - If it exists, read it. Do not overwrite content outside `## Morning briefing`. When replacing an existing briefing, the section ends at the next line that starts with `## ` (an H2 at line start). Do not match on a substring: `#### Cura Connect` contains `## Cura Connect`.
+   - If it doesn't exist, write the template inline (frontmatter `date`/`weekday`, H1, then sections: Morning briefing / Cura Connect / Personal / Max Nerdal AB / Ideas).
 
 3. **Read recent context:**
-   - Last 3 daily notes (yesterday, day-before, day-before-that) for unfinished todos and momentum.
+   - Last 3 daily notes for unfinished todos and momentum.
    - All `~/Documents/obsidian-vault/Areas/*/Projects/*.md` with `status: active` (anchors only — files without `status:` are supporting docs). For folder-style projects, the anchor is the file matching the folder name (e.g. `max-ai-framework/max-ai-framework.md`).
-   - For each area, query its Tasks list(s) from the Account map via `mcp__workspace-mcp__list_tasks` (pass `user_google_email`, `task_list_id`, `due_max` set to `{today+7d}T23:59:59Z`, leave `show_completed=False`). Merge results from all of the area's lists. Each returned task has `title`, `due` (RFC 3339), `notes`, and `id` — keep all four for later steps. Detect `DEADLINE` by case-insensitive substring match in the task `title`. Tasks **without** a `due` value are the new "undated" set — ignore unless the user asks. The legacy `Areas/*/Notes/Backlog.md` files are now stubs and must NOT be parsed.
+   - For each area, query its Tasks list(s) from the Account map via `mcp__workspace-mcp__list_tasks` (pass `user_google_email`, `task_list_id`, `due_max` set to `{today+7d}T23:59:59Z`, `show_completed=False`). Keep `title`, `due`, `notes`, `id` and the area. Detect `DEADLINE` by case-insensitive substring match in the `title`. Tasks without `due` are ignored unless the user asks. The legacy `Areas/*/Notes/Backlog.md` files are stubs and must NOT be parsed.
    - Resolve any `[[Project-name]]` wikilinks found in daily notes to their Project.md to get the current open checklist.
-   - For each configured Google account: read calendar for next 7 days via `mcp__workspace-mcp__get_events` (pass `user_google_email`, `time_min`, `time_max`), and recent unread inbox via `mcp__workspace-mcp__search_gmail_messages` with query `is:unread in:inbox` and `page_size: 3`. Resolve subjects/dates with `mcp__workspace-mcp__get_gmail_messages_content_batch` (format: `metadata`). **Never** use the hosted `mcp__claude_ai_Gmail__*` / `mcp__claude_ai_Google_Calendar__*` connectors — they route to the wrong inbox.
+   - For each configured Google account: calendar for next 7 days via `mcp__workspace-mcp__get_events`, and unread mail via `mcp__workspace-mcp__search_gmail_messages` with `include_headers: true`:
+     - `is:unread in:inbox` with `page_size: 10` for the count (write `10+` if a next page exists).
+     - `is:unread in:inbox newer_than:7d -category:promotions -category:updates -category:social` for the mail worth a look.
+   - **Never** use the hosted `mcp__claude_ai_Gmail__*` / `mcp__claude_ai_Google_Calendar__*` connectors — they route to the wrong inbox.
 
 4. **Write a `## Morning briefing` section** into today's daily note with this layout:
 
@@ -33,53 +40,51 @@ Reading calendar + Gmail for an area requires its Google account to be connected
    ## Morning briefing
    ----------------------------------------------------------------------
    ----------------------------------------------------------------------
-   #### 📅 Today's combined calendar
-   - HH:MM — [Area] Event title
-   #### Calendar notes for the week
-   - **One line per date** with notable load (heavy days, conflicts), area-tagged. Do not list attendees — just event title and time. Multiple events on the same date go on the same line, chained with `→`.
+   #### Today
+   - HH:MM — [Tag] Event title
+   #### Week
+   - **Ddd DD** — [Tag] Event HH:MM → [Tag] Event HH:MM
    #### 🚨 Deadlines within 7 days
-   - YYYY-MM-DD (N days) — [Area] [[Project-or-item]]
+   - YYYY-MM-DD (N days) — [Tag] [[Project-or-item]]
    ----------------------------------------------------------------------
-   #### Cura Connect
-   ###### Projects
-   - [[Project-name]] — next open checklist item
-   ###### Todos
-   - [ ] YYYY-MM-DD — title <!-- gt:TASK_ID --> (only overdue + today's; DEADLINE prefixed 🚨)
-   ###### Email (account)
-   - N unread
-     - "Subject" — HH:MM (last 3)
+   #### Todos
+   - [ ] YYYY-MM-DD — [Tag] title <!-- gt:TASK_ID -->
+   #### Email
+   - [Tag] account — N unread; "Subject" (Sender), "Subject" (Sender)
    ----------------------------------------------------------------------
-   #### Personal
-   - (same structure)
-   ----------------------------------------------------------------------
-   #### Max Nerdal AB
-   - (same structure; if email account not configured, note "*(no account configured)*")
-   #### 💡 Open ideas
-   - Items from the last 3 daily notes' ## Ideas sections not promoted to a Project.md or area's Notes/
+   #### Today — scratch
+   - [Tag] suggestion — why (source)
 
    ----------------------------------------------------------------------
    ----------------------------------------------------------------------
    ```
 
-   **Spacing:** keep the example tight — no blank lines between a subheader and its bullets, single blank line between top-level (`####`) blocks only where it aids scanning.
+   **Today / Week:** only non-routine events (see Routine events). Week lists only days that have something, one line per day, chained with `→`. Flag clashes with `⚠`. If a calendar is empty for the whole range, omit it silently; if it was unreachable, add one line saying so.
 
-   **Dividers:** the briefing is framed by a **double rule** (two `---` lines stacked, top and bottom). Each area block (Cura, Personal, Max Nerdal AB) is preceded by a **single `---` rule** — including Cura, which is separated from the Deadlines block above it. The Calendar / Week / Deadlines / Open ideas blocks themselves are not flanked by rules.
+   **Todos:** one merged list across all areas, no per-area blocks. Pull rule: only tasks with `due` today or earlier (overdue). Sort by `due`, then by title. DEADLINE tasks within 7 days appear in the Deadlines block as a heads-up, and in Todos only from their due date. Line format `- [ ] YYYY-MM-DD — [Tag] <title> <!-- gt:TASK_ID -->`, title verbatim and never truncated.
 
-   **Setext gotcha:** when a `---` rule directly follows a paragraph or italic line (e.g. `*(no previous...)*`), CommonMark parses it as a setext H2 underline and the line above becomes a giant heading. Always insert a blank line between paragraph/italic content and the rule below it. Rules that follow a list item or ATX heading are safe without a blank line.
+   **Email:** one line per configured account. Count, then at most 3 subjects from the "worth a look" query. Leave out subjects if there are none. Security notices (credential rotation, unknown logins) always go in.
 
-   **One row, 100-char cap:** every list item in the briefing (Calendar, Week, Deadlines, Projects, Email, Open ideas) is one line, max 100 characters. No wrapped sentences, no multi-line bullets. Summarize aggressively — strip attendees, drop "the/a", abbreviate ("HiInt" not "Hi-Intensity"), use `→` to chain. **Exception: Todos.** Todo lines must reproduce the task title verbatim (`- [ ] YYYY-MM-DD — title <!-- gt:TASK_ID -->`) — never truncate them, even if they exceed 100. The trailing HTML comment carries the Google Tasks ID so `/sweep-s` (when rewritten) can mark the task completed via API.
+   **Today — scratch:** 3–5 suggestions for what is relevant today that are not already in Todos: project next steps, tasks due in the next 1–2 days worth starting, emails that need action, open ideas from the last 3 daily notes. Each line tagged and one-row. These are suggestions only. After writing the briefing, ask the user what goes on today's list, then rewrite this block with the agreed items as `- [ ]` lines (no `gt:` comment unless it is an existing task).
 
-5. **Todo pull rule:** Only tasks whose `due` date is **today or earlier (overdue)** are written as unchecked checkboxes under that area's `###### Todos` subheader, in chronological order. Future-dated tasks stay in their Tasks list — they're not surfaced in the area block. DEADLINE-titled tasks (case-insensitive substring) with `due` within 7 days still appear in the top-level `🚨 Deadlines within 7 days` summary as a heads-up, but only get pulled into the area's Todos block on their due date (or after, if missed). Each checkbox line takes the form `- [ ] YYYY-MM-DD — <title> <!-- gt:TASK_ID -->`. If the title already starts with `🚨 DEADLINE —` keep it as-is. Undated tasks (no `due` value) are ignored unless the user asks.
+   **No per-area project lists.** Project state feeds the scratch suggestions instead.
 
-6. **Don't** auto-check off items, modify content outside `## Morning briefing`, or pull items into the area's top-level `## {area}` writing section. The briefing is fully self-contained — the user's writing surface below it is untouched.
+   **Spacing:** no blank lines between a subheader and its bullets.
+
+   **Dividers:** a double rule frames the briefing top and bottom. A single rule separates the overview (Today/Week/Deadlines), the lists (Todos/Email), and the scratch board.
+
+   **Setext gotcha:** when a `---` rule directly follows a paragraph or italic line, CommonMark parses it as a setext H2 underline. Always insert a blank line between paragraph/italic content and the rule below it. Rules that follow a list item or ATX heading are safe without a blank line.
+
+   **One row, 100-char cap:** every list item except Todos is one line, max 100 characters. Summarize aggressively — strip attendees, drop "the/a", abbreviate ("HiInt" not "Hi-Intensity").
+
+5. **Don't** auto-check off items, modify content outside `## Morning briefing`, or pull items into the daily note's `## {area}` writing sections.
 
 ## Companion command
 
-`/sweep-s` is the end-of-day closer for this workflow. Backlogs migrated from `Backlog.md` to Google Tasks on 2026-06-16 (see [[max-ai-framework-tasks-backed-backlog]]); `/sweep-s` still runs but its backlog-cleanup step is currently a no-op against the Backlog.md stubs. The Tasks-aware rewrite — which will parse the `<!-- gt:TASK_ID -->` comments emitted here and call `manage_task` action=update status=completed — is tracked in that Project.md. The daily note keeps its checked-off history regardless.
+`/sweep-s` is the end-of-day closer. It parses the `#### Todos` block, derives each line's area from its tag via the Account map, and syncs check-marks with Google Tasks through the `<!-- gt:TASK_ID -->` comments.
 
 ## Out of scope for this command
 
 - **Two-way calendar** (creating events from todos) — read-only.
-- **Email auto-triage** (which need reply) — listing unread is in scope, classification is not.
-- **Cowork monitor state** — separate future iteration.
+- **Email auto-triage** beyond the "worth a look" filter.
 - **Scheduled routine** — manual `/morning-s` only for now.
