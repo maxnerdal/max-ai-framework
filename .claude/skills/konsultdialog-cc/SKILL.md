@@ -82,5 +82,5 @@ engångsfråga om ett enskilt avrop hör den inte hit — då räcker registret.
 Säg i svaret till Max vad du skrivit och var, i en rad per not, så att han kan rätta direkt.
 
 ## Processen i valvet
-[[Operations#Uppdragsmatchning befintliga konsulter]] — matchningen vars konversationsdel skillen
+[[Operations#Konsultmatchning]] — matchningen vars konversationsdel skillen
 bär. Sökdelen: `bemlo-avropssok-cc`. Inventariet: [[Automationer]].
