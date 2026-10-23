@@ -15,8 +15,9 @@ Två noter bär underlaget. **Läs båda innan du skriver något.**
 
 - [[Konsultvägledning]] i `obsidian-vault/Areas/Cura Connect/Notes/Konsultvägledning.md` — Curas
   svar på de återkommande frågorna, i färdig formulering, plus hur ett svar skrivs.
-- [[Avropsbevakning-konsulter]] i samma mapp — per konsult: profil, kriterier, vad vi redan vet och
-  vad vi aldrig ska fråga om igen.
+- Konsultens profilfil i `Notes/Konsultprofiler/` — behovsanalysens svar, kriterier, vad vi redan vet
+  och vad vi aldrig ska fråga om igen. [[Konsultprofiler/Index|Index]] i samma mapp säger vem som är
+  aktuell och hur gammal profilen är.
 
 Handlar frågan om en specifik enhet eller ett specifikt avrop: [[Avrop-kravprofiler]]. Handlar den
 om avtalet — taxor, kompetensnivåer, ersättning — gå till avtalsnoten under `Notes/Avtal/` och
@@ -66,14 +67,15 @@ med `modify_gmail_message_labels`. Säg till Max att du gjort det.
 
 Två skrivningar, båda efter OK från Max.
 
-**Konsultens avsnitt i [[Avropsbevakning-konsulter]].** Allt konsulten berättat om sig själv:
+**Konsultens profilfil.** Allt konsulten berättat om sig själv:
 tillgänglighet och period, krav han uppfyller och inte uppfyller, regioner och arbetsformer han
 utesluter. Skriv in det där det hör — **Sök efter**, **Diskvalificerar**, **Geografi**, **Vet vi
 redan** — och plocka samtidigt bort det som nu är besvarat ur det som står som okänt. Poängen med
 avsnittet är att nästa körning inte frågar om samma sak igen.
 
-Sätt samtidigt **Senast hörd av** till dagens datum med en rad om vad konsulten sa. Den raden är
-skillens, på samma sätt som **Senast körd** tillhör `bemlo-avropssok-cc` — rör inte den.
+Sätt samtidigt **Senast kontaktad** i [[Konsultprofiler/Index|Index]] till dagens datum, och
+**Behovsanalys** om det var behovsanalysens frågor han svarade på. Lägg en rad i profilfilens **Logg**
+om vad han sa. Dateringen bor bara i Index, aldrig i profilfilen — annars glider de isär.
 
 **En post i [[Konsultvägledning]]** om frågan var ny, eller om ett befintligt svar visade sig behöva
 formuleras om. Skärp den befintliga posten i stället för att lägga en ny bredvid. Var frågan en

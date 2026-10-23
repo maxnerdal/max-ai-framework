@@ -9,10 +9,11 @@ Går igenom Bemlos avropslista åt en namngiven konsult, sållar bort det som in
 och lämnar en lista som Max kan skicka vidare. Skillen presenterar ingenting och ändrar ingenting
 i Bemlo — den läser.
 
-Konsultregistret: [[Avropsbevakning-konsulter]] i
-`obsidian-vault/Areas/Cura Connect/Notes/Avropsbevakning-konsulter.md`. **Läs det först.** Det
-säger vilket konto, vilket filter och vad som diskvalificerar ett avrop för just den konsulten.
-Står konsulten inte där, fråga Max om uppgifterna och lägg till ett avsnitt efter körningen.
+Konsultregistret: [[Konsultprofiler/Index|Index]] i
+`obsidian-vault/Areas/Cura Connect/Notes/Konsultprofiler/Index.md`. **Läs det först.** Det säger vem
+som är `bevakad` och därmed får sökas åt. Läs sedan konsultens profilfil i samma mapp: den säger
+vilket konto, vilket filter och vad som diskvalificerar ett avrop för just hen. Finns ingen profilfil
+är ingen behovsanalys gjord — fråga Max innan du söker.
 
 ## Input
 - Konsult (namn). Ingen angiven → lista de bevakade ur registret och fråga vilken.
@@ -143,10 +144,11 @@ det med `modify_gmail_message_labels`. Säg till Max att du gjort det.
 
 ## Avslut
 
-Uppdatera konsultens **Senast körd** i [[Avropsbevakning-konsulter]]. Rör inte **Senast hörd av** —
-den tillhör `konsultdialog-cc`. Hittade du ett nytt
+Skriv körningens datum och utfall i profilfilens **Logg**. Rör inte **Senast kontaktad** i
+[[Konsultprofiler/Index|Index]] — den sätts när vi hört av konsulten, av `konsultdialog-cc`. Hittade du ett nytt
 diskvalificerande mönster — ett krav som återkommer och som konsulten aldrig klarar — skriv in det
-under konsultens **Diskvalificerar** efter OK från Max, så slipper nästa körning öppna de avropen.
+under konsultens **Diskvalificerar** i profilfilen efter OK från Max, så slipper nästa körning öppna
+de avropen.
 
 ## Processen i valvet
 [[Operations#Konsultmatchning]] — den manuella matchningen som skillen bär sökdelen av. Inventariet: [[Automationer]].
