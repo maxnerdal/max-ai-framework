@@ -88,6 +88,8 @@ def parse(path):
         amount = ws.cell(r, col["Belopp"]).value
         if not day or amount in (None, ""):
             continue
+        if norm(ws.cell(r, col["Beskrivning"]).value).startswith("BETALNING MOTTAGEN"):
+            continue
         if isinstance(amount, str):
             amount = float(amount.replace(" ", "").replace(",", "."))
         ref = ws.cell(r, ref_col).value if ref_col else None
