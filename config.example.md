@@ -44,3 +44,6 @@ FPL_PROJECT_DOC=~/Documents/obsidian-vault/Areas/Personal/Projects/YourTeamName.
 # Required for live pre-deadline lineup. See .claude/commands/fpl-p.md.
 FPL_PL_PROFILE_COOKIE=
 FPL_SESSIONID_COOKIE=
+
+## Amex — household economy (amex-p)
+AMEX_SHEET_ID=your-household-economy-sheet-id
