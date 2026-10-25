@@ -169,6 +169,41 @@ def previous_periods(period, n):
     return out
 
 
+def kr2(x):
+    return f"{x:,.2f}".replace(",", " ").replace(".", ",") + " kr"
+
+
+def share(value):
+    if isinstance(value, str):
+        value = float(value.replace("%", "").replace(",", ".").strip()) / 100
+    return value if value <= 1 else value / 100
+
+
+def settlement_lines(s, amex_total):
+    """S.json: periodens Avräkning-rad med rubrikerna som nycklar, plus Partner och Ingående."""
+    p = share(s["Andel partner"])
+    rent, common = s["Hyra"], s["Gemensamt"]
+    partner, mine = s["Partner privat"], s["Max privat"]
+    name = s.get("Partner", "Partner")
+    paid = s.get("Betalt")
+    rows = [("Max", 1 - p, mine), (name, p, partner)]
+    lines = ["## Översikt", "",
+             "| Person | Andel | Hyra | Gemensamt | Privat | Att betala |", "|---|---:|---:|---:|---:|---:|"]
+    for who, sh, priv in rows:
+        lines.append(f"| {who} | {sh * 100:.0f} % | {kr(rent * sh)} | {kr(common * sh)} | {kr(priv)} | "
+                     f"{kr(rent * sh + common * sh + priv)} |")
+    lines += [f"| **Alla** | | **{kr(rent)}** | **{kr(common)}** | **{kr(partner + mine)}** | "
+              f"**{kr(rent + common + partner + mine)}** |", "",
+              f"{name}s privata inkluderar luncher ({kr(s.get('Luncher', 0))}). Amex totalt: {kr(amex_total)}.", "",
+              "## Avräkning", ""]
+    due = f"- Periodens andel: {kr2(s['Partner att betala'] + (s.get('Justering') or 0))}"
+    if s.get("Saldo") in (None, ""):
+        return lines + [due, "", "Skulden fördes inte per period den här månaden.", ""]
+    return lines + [f"- Ingående skuld: {kr2(s.get('Ingående') or 0)}", due,
+                    f"- Inbetalning: {kr2(-paid) if paid not in (None, '') else 'ej registrerad'}",
+                    f"- Utgående skuld: {kr2(s['Saldo'])}" + ("" if paid not in (None, "") else " (öppen)"), ""]
+
+
 def cmd_report(args):
     tx = json.loads(Path(args.tx).read_text())
     p = args.period
@@ -183,23 +218,20 @@ def cmd_report(args):
         if t["period"] in prev_present:
             by_cat_prev[t["category"] or "Övrigt"] += t["amount"] / len(prev_present)
 
-    people = collections.defaultdict(lambda: collections.defaultdict(float))
-    for t in rows:
-        people[t["card"]][t["tag"] or "GEMENSAM"] += t["amount"]
-
-    lines = [f"## Översikt", "",
-             "| Kortmedlem | Gemensamt | Privat | Totalt |", "|---|---:|---:|---:|"]
-    for card in sorted(people):
-        g, pr = people[card]["GEMENSAM"], people[card]["PRIVAT"]
-        lines.append(f"| {card.title()} | {kr(g)} | {kr(pr)} | {kr(g + pr)} |")
     total = sum(t["amount"] for t in rows)
-    common = sum(t["amount"] for t in rows if t["tag"] != "PRIVAT")
-    lines += [f"| **Alla** | **{kr(common)}** | **{kr(total - common)}** | **{kr(total)}** |", "",
-              "Taggarna som de står i Transaktioner. Lunchavdraget flyttas först i avräkningen.", ""]
-
     if args.settlement:
-        s = json.loads(Path(args.settlement).read_text())
-        lines += ["## Avräkning", ""] + [f"- {k}: {kr(v) if isinstance(v, (int, float)) else v}" for k, v in s.items()] + [""]
+        lines = settlement_lines(json.loads(Path(args.settlement).read_text()), total)
+    else:
+        people = collections.defaultdict(lambda: collections.defaultdict(float))
+        for t in rows:
+            people[t["card"]][t["tag"] or "GEMENSAM"] += t["amount"]
+        lines = ["## Översikt", "",
+                 "| Kortmedlem | Gemensamt | Privat | Totalt |", "|---|---:|---:|---:|"]
+        for card in sorted(people):
+            g, pr = people[card]["GEMENSAM"], people[card]["PRIVAT"]
+            lines.append(f"| {card.title()} | {kr(g)} | {kr(pr)} | {kr(g + pr)} |")
+        common = sum(t["amount"] for t in rows if t["tag"] != "PRIVAT")
+        lines += [f"| **Alla** | **{kr(common)}** | **{kr(total - common)}** | **{kr(total)}** |", ""]
 
     avg_label = f"snitt {prev_present[0]}–{prev_present[-1]}" if prev_present else "snitt"
     lines += ["## Kategorier", "", f"| Kategori | Gemensamt | Privat | Totalt | {avg_label} | Δ |", "|---|---:|---:|---:|---:|---:|"]
