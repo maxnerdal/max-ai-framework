@@ -45,11 +45,5 @@ FPL_PROJECT_DOC=~/Documents/obsidian-vault/Areas/Personal/Projects/YourTeamName.
 FPL_PL_PROFILE_COOKIE=
 FPL_SESSIONID_COOKIE=
 
-## Yahoo Fantasy NBA (nba-fantasy-p)
-# OAuth client and refresh token live in ~/.config/max-ai-framework/yahoo-oauth.json, not here.
-YAHOO_NBA_LEAGUE_ID=your-league-id
-YAHOO_NBA_TEAM_ID=your-team-number
-YAHOO_NBA_PROJECT_DOC=~/Documents/obsidian-vault/Areas/Personal/Projects/YourTeamName.md
-
 ## Amex — household economy (amex-p)
 AMEX_SHEET_ID=your-household-economy-sheet-id

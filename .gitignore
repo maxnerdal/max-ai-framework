@@ -23,3 +23,6 @@
 # Claude Code synced-skills cache (managed by the harness)
 .claude/skills/synced/
 .claude/skills/.trash/
+
+# App-owned skills symlinked in from their own repos (see "Pattern: build apps in their own repos")
+.claude/skills/nba-fantasy-p

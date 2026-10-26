@@ -5,7 +5,7 @@ Max Nerdal's personal AI framework. Source of truth for Claude Code's shared lib
 
 ## Structure (flat shared library)
 - `.claude/` — symlinked to `~/.claude/`. Holds the global identity (`CLAUDE.md`), `agents/`, `commands/`, `rules/`, `skills/`, `settings.json`. Agents follow the same area-suffix convention: `application-drafter-p.md`, `application-finalizer-p.md`, `interview-preparer-p.md`. Commands: `morning-s.md`, `sweep-s.md`, `job-application-p.md`, `interview-prep-p.md`, `update-application-p.md`.
-- `.claude/skills/` — atomic capabilities, each as `<name>/SKILL.md` with frontmatter. Shared: `drive-reader-s/`, `drive-writer-s/`. Personal: `cv-tailorer-p/`, `interview-prepper-p/`, `job-post-parser-p/`, `job-searcher-p/`, `job-tracker-p/`, `nba-fantasy-p/`, `personal-letter-writer-p/`, `screening-answerer-p/`. Auto-discoverable across projects via the `~/.claude/skills/` symlink.
+- `.claude/skills/` — atomic capabilities, each as `<name>/SKILL.md` with frontmatter. Shared: `drive-reader-s/`, `drive-writer-s/`. Personal: `cv-tailorer-p/`, `interview-prepper-p/`, `job-post-parser-p/`, `job-searcher-p/`, `job-tracker-p/`, `personal-letter-writer-p/`, `screening-answerer-p/`. Auto-discoverable across projects via the `~/.claude/skills/` symlink.
 - `workflows/` — multi-step orchestrations. `job-application-p/`, `interview-prep-p/`, `update-application-p/`.
 - `prompts/` — shared writing principles. `drive-output-conventions-p.md`, `source-material-loader-p.md`, `tailoring-principles-p.md`.
 - `templates/` — HTML templates. `cv-p.html`, `letter-p.html`, `job-post-p.html`.
@@ -17,6 +17,17 @@ Max Nerdal's personal AI framework. Source of truth for Claude Code's shared lib
 Project code does not live here. Each app — `tradingbots`, `hosp-automation`, future portfolio site, future Cura ai-framework — is its own repo with its own `CLAUDE.md` that `@imports` the relevant Obsidian area docs. This framework provides the shared toolkit; app repos provide the project context.
 
 The Obsidian vault at `~/Documents/obsidian-vault/` is the source of truth for business knowledge per area (Cura Connect / Max Nerdal AB / Personal). App repos load that context via `@~/Documents/obsidian-vault/Areas/{area}/_context/...` imports.
+
+### Skills that belong to an app
+A skill that belongs to one app lives in that app's repo under `.claude/skills/`, not here. The reason is Claude Code in the cloud (web and phone): a cloud session clones only the repo it is started in, so `~/.claude/skills` and the vault are not there. Everything the skill needs (scripts, data, content) goes in the app repo too.
+
+| Kind of skill | Lives in | Global on the Mac? |
+|---|---|---|
+| Generic, cross-project (`drive-reader-s`, `morning-s`) | this framework | yes |
+| Used only inside one app (`ufl-reporter` in `uppsala-fantasy-league`) | the app repo | no |
+| Belongs to an app but should work from anywhere (`nba-fantasy-p` in `the-champ`) | the app repo, symlinked into `.claude/skills/` by the app's `install.sh` | yes |
+
+Symlinked app skills are listed in `.gitignore` so this public repo never points at a private one. Edit and commit them in their own repo.
 
 ## Setup
 `setup.sh` symlinks `.claude/{CLAUDE.md,agents,commands,rules}` into `~/.claude/`. Run once on a new machine.
