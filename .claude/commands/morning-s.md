@@ -26,7 +26,7 @@ Daily blocks that are left out of the briefing entirely: `Vakna`, `Gym`, `Lunch`
 
 3. **Read recent context:**
    - Last 3 daily notes for unfinished todos and momentum.
-   - All `~/Documents/obsidian-vault/Areas/*/Projects/*.md` with `status: active` (anchors only — files without `status:` are supporting docs). For folder-style projects, the anchor is the file matching the folder name (e.g. `max-ai-framework/max-ai-framework.md`).
+   - All `~/Documents/obsidian-vault/Areas/*/Projects/*.md` with `status: active` (anchors only — files without `status:` are supporting docs). For folder-style projects, the anchor is the file matching the folder name (e.g. `max-ai-framework/max-ai-framework.md`) or `Index.md`. Grouping folders (e.g. `Personal/Projects/Studier/`, `Personal/Projects/Fantasy/`) have no anchor of their own, so also read `Areas/*/Projects/*/*.md` and `Areas/*/Projects/*/*/*.md` for `status: active`.
    - For each area, query its Tasks list(s) from the Account map via `mcp__workspace-mcp__list_tasks` (pass `user_google_email`, `task_list_id`, `due_max` set to `{today+7d}T23:59:59Z`, `show_completed=False`). Keep `title`, `due`, `notes`, `id` and the area. Detect `DEADLINE` by case-insensitive substring match in the `title`. Tasks without `due` are ignored unless the user asks. The legacy `Areas/*/Notes/Backlog.md` files are stubs and must NOT be parsed.
    - Resolve any `[[Project-name]]` wikilinks found in daily notes to their Project.md to get the current open checklist.
    - For each configured Google account: calendar for next 7 days via `mcp__workspace-mcp__get_events`, and unread mail via `mcp__workspace-mcp__search_gmail_messages` with `include_headers: true`:

@@ -55,7 +55,7 @@ Om en mening bara håller när källan är starkare än den är: skriv om mening
 ## Projektkontext
 
 Kurs- och projektstatus ligger i vaultet, inte här:
-`~/Documents/obsidian-vault/Areas/Personal/Projects/forskningsmetod-2IS064/`.
+`~/Documents/obsidian-vault/Areas/Personal/Projects/Studier/forskningsmetod-2IS064/`.
 Läs projektankaret och beslutsloggen innan text skrivs.
 
 ## Att fylla på

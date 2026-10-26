@@ -63,7 +63,7 @@ B (färdig kod) via de resurser hen hade tillgång till.
 3. **Läs relevant Lab-kod** — se `labs/` (se separat sektion nedan) eller be Max
    pasta in om det saknas.
 4. **Läs relevant föreläsning** — extraherade `.txt`-filer i
-   `~/Documents/obsidian-vault/Areas/Personal/Projects/algoritmisk-problemlosning-grafer-och-floden/tddd95-slides/`.
+   `~/Documents/obsidian-vault/Areas/Personal/Projects/Studier/algoritmisk-problemlosning-grafer-och-floden/tddd95-slides/`.
 5. **Läs relevant CP4-kapitel** — `CP4-Book1-Halim.txt` / `CP4-Book2-Halim.txt`
    i samma mapp.
 6. **Läs skill:ens tidigare punkter** — förhindrar att jag glömmer preferenser

@@ -60,11 +60,12 @@ The pivot: HOSP automation stays in Cura because Cura is the beneficiary, even t
 - Supporting docs: `<ProjectName>-<aspect>.md` with **no status frontmatter** (they're documentation, not separately status-tracked).
 - Independent deliverable / peer artifact (e.g. a published whitepaper): may carry its own `status:`.
 - When a project grows past ~3 substantial files → promote to a folder `<ProjectName>/` with `Index.md` as anchor.
+- Group related projects in a plain folder (`Projects/Studier/`, `Projects/Fantasy/`). A grouping folder has no anchor and no `status:`; it is never a project itself. Make one when there are at least two projects of the same kind.
 
 **Plan-file rule:** `~/.claude/plans/*.md` is ephemeral — plan-mode scratchpad. Persistent project state lives in `Areas/{area}/Projects/`. When a plan is approved, distill its persistent parts (description, checklist, decisions) into a Project.md; the plan file can then be discarded.
 
 **Triggers (conditional reads):**
-- When the user asks "what's active" / "what am I working on" → read `Areas/*/Projects/*.md` for `status: active` (anchors only — files without `status:` are supporting docs).
+- When the user asks "what's active" / "what am I working on" → read `Areas/*/Projects/**/*.md` for `status: active` (anchors only — files without `status:` are supporting docs).
 - When the user references a project by name (or via `[[wikilink]]`) → resolve and read that Project.md.
 - When the user describes a new multi-step initiative → propose creating a Project.md in the right area; don't silently file under the wrong area.
 - **Coupling rule:** when editing a project anchor, check files matching `<ProjectName>-*.md` (the supporting docs) for mirror updates. Example: editing `curaconnect-ai-framework.md` → also check `curaconnect-ai-framework-architecture.md`.
