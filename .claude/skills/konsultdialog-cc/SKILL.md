@@ -11,8 +11,19 @@ utkast och skriver valvnoter — den skickar ingenting.
 Systerskill till `bemlo-avropssok-cc`, som söker fram avropen och skickar listan. Den här tar
 konversationen som följer på listan: konsultens frågor, hans svar på kraven, hans tillgänglighet.
 
-Två noter bär underlaget. **Läs båda innan du skriver något.**
+Tre källor bär underlaget. **Läs alla tre innan du skriver något.**
 
+- **Konsultens kandidatkort i Recman.** Kör från `~/Documents/curaconnect-ai-framework`:
+
+  ```
+  ./scripts/konsultcv.py "<namn eller mejladress>" --avd "<avdelningen frågan gäller>"
+  ```
+
+  Kortet ger legitimationsår, arbetslivserfarenhet avdelning för avdelning, utbildning och vilka
+  dokument som ligger inne. Recman är masterregister och kortet hålls uppdaterat; ett CV som
+  bifogats tråden är en ögonblicksbild som åldras. **Fråga aldrig konsulten om något som står på
+  kortet** — att be någon bekräfta två års erfarenhet när kortet visar fem säger bara att vi inte
+  läst det. Att hen redan arbetat på avdelningen avropet gäller är det viktigaste kortet svarar på.
 - [[Konsultvägledning]] i `obsidian-vault/Areas/Cura Connect/Notes/Konsultvägledning.md` — Curas
   svar på de återkommande frågorna, i färdig formulering, plus hur ett svar skrivs.
 - Konsultens profilfil i `Notes/Konsultprofiler/` — behovsanalysens svar, kriterier, vad vi redan vet
@@ -73,9 +84,10 @@ utesluter. Skriv in det där det hör — **Sök efter**, **Diskvalificerar**, *
 redan** — och plocka samtidigt bort det som nu är besvarat ur det som står som okänt. Poängen med
 avsnittet är att nästa körning inte frågar om samma sak igen.
 
-Sätt samtidigt **Senast kontaktad** i [[Konsultprofiler/Index|Index]] till dagens datum, och
-**Behovsanalys** om det var behovsanalysens frågor han svarade på. Lägg en rad i profilfilens **Logg**
-om vad han sa. Dateringen bor bara i Index, aldrig i profilfilen — annars glider de isär.
+Sätt samtidigt **Senast kontaktad** i [[Konsultprofiler/Index|Index]] till det datum kontakten
+faktiskt skedde — inte dagen du råkar köra skillen — och **Behovsanalys** om det var
+behovsanalysens frågor han svarade på. Lägg en rad i profilfilens **Logg** om vad han sa.
+Dateringen bor bara i Index, aldrig i profilfilen — annars glider de isär.
 
 **En post i [[Konsultvägledning]]** om frågan var ny, eller om ett befintligt svar visade sig behöva
 formuleras om. Skärp den befintliga posten i stället för att lägga en ny bredvid. Var frågan en
