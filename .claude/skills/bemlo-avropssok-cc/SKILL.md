@@ -31,29 +31,15 @@ Gå till Bemlo bara när något av det här gäller: fältet saknas i raden, rad
 det du vet, eller du ska presentera någon. Skillen presenterar ingenting, så den behöver sällan
 Chrome alls.
 
-```bash
-cd ~/Documents/curaconnect-ai-framework
-uv run python manage.py shell -c "..."
-```
+Hur databasen läses — anslutningen, tabellerna, var zon, krav och tilldelning ligger i
+`source_data`, och fällorna — står i `~/Documents/curaconnect-ai-framework/tenders/README.md`.
+**Läs den innan första frågan.** Den hålls ihop med koden, så den är rätt när den här skillen
+inte är det. Två av fällorna fäller just den här sökningen om du missar dem: `profession` och
+`region` stavas olika beroende på om mejlflödet eller scrapern skrev raden.
 
-De öppna avropen för ett yrke och en region:
-
-```python
-from tenders.models import Tender
-import datetime
-qs = (Tender.objects
-      .filter(status="open", deadline__gte=datetime.date.today(), profession="NURSE")
-      .filter(region__icontains="uppsala")
-      .select_related("ward").order_by("deadline"))
-```
-
-`profession` är `NURSE` eller `DOCTOR`. `region` skrivs på två sätt i tabellen — `UPPSALA` från
-mejlflödet och `Region Uppsala` från scrapern — så filtrera alltid med `icontains`, aldrig på exakt
-värde, annars tappar du halva träffarna.
-
-Skallkraven ligger i `requirements` som en lista av dictar. De som konsulten måste uppfylla är de
-med `required: True` och `kind: "custom"`; `kind: "document"` är pappersarbetet (HOSP, IVO, CV,
-SITHS, belastningsregister, referens, överenskommelse) och gäller alla avrop lika.
+Det som är skillens eget: sållningen nedan läser skallkraven ur `requirements` och resten ur
+`source_data`, och ett avrop är svarbart bara när `source_status` är `OPEN_FOR_PRESENTATIONS` eller
+`URGENT`.
 
 ```python
 krav = [k.get("heading") or k.get("title", "")
@@ -61,38 +47,7 @@ krav = [k.get("heading") or k.get("title", "")
         if isinstance(k, dict) and k.get("required") and k.get("kind") == "custom"]
 ```
 
-Zon, tilldelning, journalsystem och beskrivning ligger i `source_data`, hela Bemlo-svaret rått,
-under `vacancy.tender`:
-
-```python
-td = ((t.source_data or {}).get("data") or {}).get("vacancy", {}).get("tender", {})
-td["availablePriceGroups"]   # [{title: "Zon 1: Leg. sjuksköterska", basePay: 616, ...}]
-td["attributionCriteria"]    # [{type: "FILL_RATE", weight: 50}, {type: "CONTINUITY", weight: 50}]
-td["requirements"]["journalSystemRequirements"]   # [{journalSystem: "COSMIC", isRequired: False}]
-td["candidateDescription"]   # det konsulten ska läsa
-td["vacancyDescription"]     # verksamhetens egen text
-td["maxPresentations"]       # kan vara None, då finns ingen gräns
-td["fillRate"]               # fyllnadsgraden just nu, 0 betyder att ingen presenterat än
-```
-
-Fällor i tabellen:
-
-- **`enforceRows` betyder inte radbaserat.** Flaggan står `True` på avrop som inte kräver hel
-  schemarad — 30 B, ORT261022-6, hade `True` och var ändå fritt att plocka pass ur (Max, 2026-10-28).
-  Som med priset: skallkraven avgör, flaggan gör det inte. Säg aldrig till en konsult att ett avrop
-  är radbaserat med den som enda grund.
-- **`status: "open"` och svarsdag kvar räcker inte.** Läs `source_status` också: `FILLED` betyder
-  att avropet redan är fyllt trots öppen svarsdag. `OPEN_FOR_PRESENTATIONS` är det som går att svara
-  på, `URGENT` likaså.
-- **Samma `reference` förekommer flera gånger.** Dels på olika enheter i olika regioner — `AVD261023-7`
-  är både Avd 5 Jger i Stockholm och Avdelning 63 Hematologi i en annan region. Dels som dubblett av
-  samma avrop: `source` säger vilken rad som är hel. `scraper` och `mail` är de lästa raderna;
-  `manual` är en handimport, ofta av enhetens lediga pass ur en csv, och den har tom `profession`,
-  `requested_hours: None`, tomt `source_status` och tomt `source_data`. 30 B låg 2026-10-28 som två
-  rader på det sättet. Ta raden som har `source_data`, och matcha på enhetsnamnet, aldrig på koden
-  ensam.
-- `requested_hours` är avropets omfattning; summan av passens timmar ska stämma med den. Gör den
-  inte det är raden halvläst.
+Säg aldrig till en konsult att ett avrop är radbaserat utifrån `enforceRows`; se README.
 
 ## Webbläsare och konto
 
