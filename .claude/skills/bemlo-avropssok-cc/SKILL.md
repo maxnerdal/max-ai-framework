@@ -1,13 +1,14 @@
 ---
 name: bemlo-avropssok-cc
-description: Sök fram aktiva avrop i Bemlo åt en bevakad konsult och sammanställ en lista som Max kan skicka vidare, som mejlutkast eller tabell. Läkaravrop hämtas från JK-kontot, sjuksköterskeavrop från Cura-kontot. Triggers on: kolla avrop åt, vad finns för uppdrag, avropsbevakning, lediga uppdrag till konsult, sök avrop i Bemlo, skicka lista på uppdrag.
+description: Sök fram aktiva avrop åt en bevakad konsult och sammanställ en lista som Max kan skicka vidare, som mejlutkast eller tabell. Avropen läses ur avropsdatabasen i första hand; Bemlo bara när databasen inte räcker, och då läkaravrop från JK-kontot och sjuksköterskeavrop från Cura-kontot. Triggers on: kolla avrop åt, vad finns för uppdrag, avropsbevakning, lediga uppdrag till konsult, sök avrop i Bemlo, skicka lista på uppdrag.
 ---
 
 # Avropssök åt en bevakad konsult
 
-Går igenom Bemlos avropslista åt en namngiven konsult, sållar bort det som inte går att svara på,
-och lämnar en lista som Max kan skicka vidare. Skillen presenterar ingenting och ändrar ingenting
-i Bemlo — den läser.
+Går igenom de aktiva avropen åt en namngiven konsult, sållar bort det som inte går att svara på,
+och lämnar en lista som Max kan skicka vidare. Avropen läses ur avropsdatabasen i första hand och
+ur Bemlo när databasen inte räcker. Skillen presenterar ingenting och ändrar ingenting i Bemlo —
+den läser.
 
 Konsultregistret: [[Konsultprofiler/Index|Index]] i
 `obsidian-vault/Areas/Cura Connect/Notes/Konsultprofiler/Index.md`. **Läs det först.** Det säger vem
@@ -19,7 +20,83 @@ vilket konto, vilket filter och vad som diskvalificerar ett avrop för just hen.
 - Konsult (namn). Ingen angiven → lista de bevakade ur registret och fråga vilken.
 - Ev. avgränsning för den här körningen (region, period, minsta omfattning).
 
+## Databasen först, Bemlo sedan
+
+Avropen ligger i `curaconnect-ai-framework`-databasen, lästa ur Bemlo av avropsscrapern och
+mejlflödet. **Sök där först.** Hela listan, skallkraven, zonen, tilldelningskriterierna, perioden,
+omfattningen, svarsdagen och uppdragsbeskrivningen finns i tabellen — det är snabbare än Chrome,
+det kräver inget kontobyte, och det går att fråga på tvärs över regioner.
+
+Gå till Bemlo bara när något av det här gäller: fältet saknas i raden, raden ser inaktuell ut mot
+det du vet, eller du ska presentera någon. Skillen presenterar ingenting, så den behöver sällan
+Chrome alls.
+
+```bash
+cd ~/Documents/curaconnect-ai-framework
+uv run python manage.py shell -c "..."
+```
+
+De öppna avropen för ett yrke och en region:
+
+```python
+from tenders.models import Tender
+import datetime
+qs = (Tender.objects
+      .filter(status="open", deadline__gte=datetime.date.today(), profession="NURSE")
+      .filter(region__icontains="uppsala")
+      .select_related("ward").order_by("deadline"))
+```
+
+`profession` är `NURSE` eller `DOCTOR`. `region` skrivs på två sätt i tabellen — `UPPSALA` från
+mejlflödet och `Region Uppsala` från scrapern — så filtrera alltid med `icontains`, aldrig på exakt
+värde, annars tappar du halva träffarna.
+
+Skallkraven ligger i `requirements` som en lista av dictar. De som konsulten måste uppfylla är de
+med `required: True` och `kind: "custom"`; `kind: "document"` är pappersarbetet (HOSP, IVO, CV,
+SITHS, belastningsregister, referens, överenskommelse) och gäller alla avrop lika.
+
+```python
+krav = [k.get("heading") or k.get("title", "")
+        for k in (t.requirements or [])
+        if isinstance(k, dict) and k.get("required") and k.get("kind") == "custom"]
+```
+
+Zon, tilldelning, journalsystem och beskrivning ligger i `source_data`, hela Bemlo-svaret rått,
+under `vacancy.tender`:
+
+```python
+td = ((t.source_data or {}).get("data") or {}).get("vacancy", {}).get("tender", {})
+td["availablePriceGroups"]   # [{title: "Zon 1: Leg. sjuksköterska", basePay: 616, ...}]
+td["attributionCriteria"]    # [{type: "FILL_RATE", weight: 50}, {type: "CONTINUITY", weight: 50}]
+td["requirements"]["journalSystemRequirements"]   # [{journalSystem: "COSMIC", isRequired: False}]
+td["candidateDescription"]   # det konsulten ska läsa
+td["vacancyDescription"]     # verksamhetens egen text
+td["maxPresentations"]       # kan vara None, då finns ingen gräns
+td["fillRate"]               # fyllnadsgraden just nu, 0 betyder att ingen presenterat än
+```
+
+Fällor i tabellen:
+
+- **`enforceRows` betyder inte radbaserat.** Flaggan står `True` på avrop som inte kräver hel
+  schemarad — 30 B, ORT261022-6, hade `True` och var ändå fritt att plocka pass ur (Max, 2026-10-28).
+  Som med priset: skallkraven avgör, flaggan gör det inte. Säg aldrig till en konsult att ett avrop
+  är radbaserat med den som enda grund.
+- **`status: "open"` och svarsdag kvar räcker inte.** Läs `source_status` också: `FILLED` betyder
+  att avropet redan är fyllt trots öppen svarsdag. `OPEN_FOR_PRESENTATIONS` är det som går att svara
+  på, `URGENT` likaså.
+- **Samma `reference` förekommer flera gånger.** Dels på olika enheter i olika regioner — `AVD261023-7`
+  är både Avd 5 Jger i Stockholm och Avdelning 63 Hematologi i en annan region. Dels som dubblett av
+  samma avrop: `source` säger vilken rad som är hel. `scraper` och `mail` är de lästa raderna;
+  `manual` är en handimport, ofta av enhetens lediga pass ur en csv, och den har tom `profession`,
+  `requested_hours: None`, tomt `source_status` och tomt `source_data`. 30 B låg 2026-10-28 som två
+  rader på det sättet. Ta raden som har `source_data`, och matcha på enhetsnamnet, aldrig på koden
+  ensam.
+- `requested_hours` är avropets omfattning; summan av passens timmar ska stämma med den. Gör den
+  inte det är raden halvläst.
+
 ## Webbläsare och konto
+
+Behövs bara när databasen inte räcker, enligt ovan.
 
 Claude in Chrome (`mcp__claude-in-chrome__*`). Två Chrome-profiler med varsin anslutning:
 
@@ -36,7 +113,9 @@ Claude in Chrome (`mcp__claude-in-chrome__*`). Två Chrome-profiler med varsin a
    byt profil. Hoppa aldrig över kontrollen; en läkarlista hämtad ur Cura-kontot blir tyst fel,
    kontot ser bara ett fåtal gamla läkaravrop.
 
-## Filtrera
+## Filtrera i Bemlo
+
+Bara när du gått till Bemlo. Filtrerar du i databasen i stället, se ovan.
 
 `/vacancies/tenders`, knappen **Filtrera**. Filtren går att välja på: Utbildning (yrke +
 specialisering), Land, Region, Kommun, Verksamhet, Kund, Startdatum, Svarsdag. Låt
@@ -86,9 +165,13 @@ Status **Aktiv** betyder inte att avropet går att svara på. Ta bort:
 Ett avrop kan ha prisrad för Leg. Läkare och ändå ha "bifogat specialistbevis" som skallkrav. Priset
 avgör inte, skallkraven gör.
 
-## Läs detaljsidan
+## Läs detaljsidan i Bemlo
 
-Zon, krav och uppdragsbeskrivning står bara på avropets egen sida, inte i listan. Öppna varje
+**Behövs sällan.** Zon, krav, tilldelningskriterier och uppdragsbeskrivning finns i databasen —
+se **Databasen först**. Det här är vägen när raden saknar `source_data`, eller när du vill
+kontrollera något mot källan.
+
+Zon, krav och uppdragsbeskrivning står inte i Bemlos lista, bara på avropets egen sida. Öppna varje
 kvarvarande avrop och plocka ut delarna i stället för hela sidan:
 
 ```js
