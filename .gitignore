@@ -26,3 +26,6 @@
 
 # App-owned skills symlinked in from their own repos (see "Pattern: build apps in their own repos")
 .claude/skills/nba-fantasy-p
+
+# Rendered copies of docs that live here as Markdown
+docs/claude-code-first-integration.pdf

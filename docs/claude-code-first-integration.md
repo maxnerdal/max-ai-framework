@@ -1,4 +1,4 @@
-# Getting Started — First Skill and First API Integration
+# Getting Started: First Skill and First API Integration
 
 A hand-off guide for someone who has never used Claude Code and wants to automate one real
 business process. Written for macOS with the Claude Code desktop app. Takes a couple of hours
